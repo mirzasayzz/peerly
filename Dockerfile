@@ -40,4 +40,7 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 # Expose port 8000 and start php-fpm server
 EXPOSE 8000
 
+# Allow multiple concurrent requests to fix the extreme slowness
+ENV PHP_CLI_SERVER_WORKERS=5
+
 CMD php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
