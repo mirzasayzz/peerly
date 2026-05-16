@@ -6,7 +6,7 @@
             <i class="ph ph-list" style="font-size:22px;"></i>
         </button>
         <a href="{{ url('/') }}" class="navbar-brand">
-            <span class="logo-icon">P</span>
+            <img src="{{ asset('images/peerly.png') }}" alt="Peerly Logo" style="height: 32px; width: auto;">
             <span>Peerly</span>
         </a>
     </div>

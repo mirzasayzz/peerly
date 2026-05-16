@@ -24,7 +24,7 @@
     <div class="auth-page">
         <div class="auth-card fade-in">
             <div class="auth-logo">
-                <span class="logo-icon">P</span>
+                <img src="{{ asset('images/peerly.png') }}" alt="Peerly Logo" style="height: 40px; width: auto;">
                 Peerly
             </div>
             {{ $slot }}
