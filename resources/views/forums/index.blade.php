@@ -22,14 +22,14 @@
                             <h3>{{ $forum->name }}</h3>
                             <p>{{ Str::limit($forum->description, 80) }}</p>
                         </div>
-                        <div style="text-align: right; min-width: 80px;">
+                        <div style="text-align: right; min-width: 70px; flex-shrink: 0;">
                             <div class="font-semibold" style="font-size: 15px;">{{ $forum->posts_count }}</div>
                             <div class="text-xs text-muted">discussions</div>
                         </div>
                         @if($forum->latestPost)
-                        <div style="text-align: right; min-width: 140px; font-size: 12px; color: var(--text-tertiary);">
-                            <div class="truncate">{{ Str::limit($forum->latestPost->title, 30) }}</div>
-                            <div>by {{ $forum->latestPost->user->name }} · {{ $forum->latestPost->created_at->diffForHumans() }}</div>
+                        <div class="forum-latest hidden-mobile" style="text-align: right; width: 220px; font-size: 12px; color: var(--text-tertiary); flex-shrink: 0;">
+                            <div class="truncate" style="color: var(--text-secondary); font-weight: 500;">{{ Str::limit($forum->latestPost->title, 40) }}</div>
+                            <div class="truncate">by {{ $forum->latestPost->user->name }} · {{ $forum->latestPost->created_at->diffForHumans() }}</div>
                         </div>
                         @endif
                     </a>
