@@ -134,7 +134,7 @@ class DatabaseSeeder extends Seeder
                 'body' => $pd['body'],
                 'last_activity_at' => now()->subHours(rand(1, 72)),
                 'view_count' => rand(5, 200),
-                'is_pinned' => $i === 0,
+                'is_pinned' => $i === 0 ? 'true' : 'false',
             ]);
 
             $postTags = $tags->filter(fn ($t) => in_array($t->name, $pd['tags']));
