@@ -102,7 +102,7 @@ input, textarea, select { font: inherit; color: inherit; background: transparent
 .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
 
 /* --- Navbar --- */
-.navbar { position: fixed; top: 0; left: 0; right: 0; height: var(--navbar-h); background: var(--bg-secondary); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; z-index: 100; backdrop-filter: blur(12px); }
+.navbar { position: fixed; top: 0; left: 0; right: 0; height: var(--navbar-h); background: var(--bg-secondary); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; backdrop-filter: blur(12px); }
 .navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; }
 .navbar-brand .logo-icon { width: 32px; height: 32px; background: var(--gradient); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 16px; }
 .navbar-center { flex: 1; max-width: 480px; margin: 0 auto; }
@@ -290,7 +290,10 @@ input, textarea, select { font: inherit; color: inherit; background: transparent
 }
 
 @media (max-width: 640px) {
-  .navbar { padding: 0 16px; }
+  .navbar { padding: 0 12px; }
+  .navbar-brand span { display: none; }
+  .navbar-actions { gap: 6px; }
+  .navbar-actions .btn { padding: 8px 12px; font-size: 13px; }
   .navbar-center { display: none; }
   .app-main { padding: 12px; }
   .post-card { padding: 16px; flex-direction: column; gap: 12px; }
