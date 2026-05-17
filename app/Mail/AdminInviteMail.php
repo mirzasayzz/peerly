@@ -8,19 +8,19 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AdminWelcomeMail extends Mailable
+class AdminInviteMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public string $adminName) {}
+    public function __construct(public string $onboardingLink) {}
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Welcome aboard, Admin! 🎉 Your Peerly account is ready.');
+        return new Envelope(subject: 'You have been invited as an Admin on Peerly!');
     }
 
     public function content(): Content
     {
-        return new Content(view: 'emails.admin-welcome');
+        return new Content(view: 'emails.admin-invite');
     }
 }

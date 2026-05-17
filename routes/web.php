@@ -60,11 +60,15 @@ Route::middleware('auth')->group(function () {
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
-    // Admin Guest Routes
+    // Admin Guest Routes (no auth required)
     Route::middleware('guest')->group(function () {
         Route::get('login', [\App\Http\Controllers\Admin\AuthController::class, 'showLoginForm'])->name('login');
         Route::post('login', [\App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login.submit');
     });
+
+    // Admin Onboarding (public — invitee is not logged in yet)
+    Route::get('onboard/{token}', [\App\Http\Controllers\Admin\OnboardingController::class, 'show'])->name('onboard.show');
+    Route::post('onboard/{token}', [\App\Http\Controllers\Admin\OnboardingController::class, 'complete'])->name('onboard.complete');
 
     // Admin Authenticated Routes
     Route::middleware('auth')->group(function () {
@@ -73,40 +77,31 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/manage-admins', function (\Illuminate\Http\Request $request) {
             if (auth()->user()->email !== 'tubamirza822@gmail.com') abort(403);
             $request->validate(['email' => 'required|email']);
-            
-            $user = \App\Models\User::where('email', $request->email)->first();
-            
-            if (!$user) {
-                // Auto-generate a username
-                $baseUsername = \Illuminate\Support\Str::slug(explode('@', $request->email)[0], '_');
-                $username = preg_replace('/[^A-Za-z0-9_]/', '', $baseUsername);
-                $counter = 1;
-                while (\App\Models\User::where('username', $username)->exists()) {
-                    $username = $baseUsername . $counter++;
-                }
 
-                $user = \App\Models\User::create([
-                    'name' => 'New Admin',
-                    'email' => $request->email,
-                    'username' => $username,
-                    'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(16)),
-                    'role' => 'admin',
-                    'email_verified_at' => now(),
-                ]);
-
-                // Generate Password Reset Token
-                $token = \Illuminate\Support\Facades\Password::getRepository()->create($user);
-                $resetLink = url(route('password.reset', ['token' => $token, 'email' => $user->email], false));
-
-                // Send Welcome Email
-                \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\AdminWelcomeMail($resetLink));
-                
-                return back()->with('status', 'New admin account created and welcome email sent successfully!');
-            } else {
-                $user->role = 'admin';
-                $user->save();
-                return back()->with('status', 'Existing user promoted to admin successfully.');
+            // Check if user already exists and is already an admin
+            $existingUser = \App\Models\User::where('email', $request->email)->first();
+            if ($existingUser && $existingUser->role === 'admin') {
+                return back()->with('status', 'This user is already an admin.');
             }
+
+            // Remove any old pending invitation for this email
+            \App\Models\AdminInvitation::where('email', $request->email)->delete();
+
+            // Create a fresh invitation token (expires in 48 hours)
+            $token = \Illuminate\Support\Str::random(64);
+            \App\Models\AdminInvitation::create([
+                'email'      => $request->email,
+                'token'      => $token,
+                'status'     => 'pending',
+                'expires_at' => now()->addHours(48),
+            ]);
+
+            $onboardingLink = url('/admin/onboard/' . $token);
+
+            // Send invitation email
+            \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\AdminInviteMail($onboardingLink));
+
+            return back()->with('status', 'Invitation email sent to ' . $request->email . '. They will receive a link to complete their onboarding.');
         })->name('manage.add');
 
         Route::delete('/manage-admins/{user}', function (\App\Models\User $user) {
