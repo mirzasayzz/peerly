@@ -83,10 +83,15 @@ class OnboardingController extends Controller
         // Mark invitation as completed
         $invitation->update(['status' => 'completed']);
 
-        // Send welcome confirmation email
-        Mail::to($user->email)->send(new AdminWelcomeMail($user->name));
+        // Send welcome confirmation email (don't crash if it fails)
+        try {
+            Mail::to($user->email)->send(new AdminWelcomeMail($user->name));
+        } catch (\Exception $e) {
+            // Log but don't break the flow
+            \Log::warning('Failed to send admin welcome email: ' . $e->getMessage());
+        }
 
-        return redirect()->route('admin.login')
+        return redirect()->route('login')
             ->with('status', 'Your admin account has been created! You can now log in.');
     }
 }

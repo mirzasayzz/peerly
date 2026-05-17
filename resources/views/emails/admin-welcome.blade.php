@@ -2,48 +2,37 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  body { margin: 0; padding: 0; background: #0f0f13; font-family: 'Segoe UI', sans-serif; }
-  .wrapper { max-width: 560px; margin: 40px auto; background: #1a1a2e; border-radius: 16px; overflow: hidden; border: 1px solid #2a2a3e; }
-  .header { background: linear-gradient(135deg, #4ade80, #22d3ee); padding: 40px 32px; text-align: center; }
-  .header h1 { color: white; font-size: 28px; margin: 0 0 8px; font-weight: 800; }
-  .header p { color: rgba(255,255,255,0.85); margin: 0; font-size: 15px; }
-  .body { padding: 36px 32px; }
-  .badge { display: inline-block; background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.4); color: #4ade80; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; margin-bottom: 24px; }
-  .body p { color: #a0a0c0; font-size: 15px; line-height: 1.7; margin: 0 0 20px; }
-  .perks { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 20px; margin: 20px 0; }
-  .perk { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: #c0c0e0; font-size: 14px; }
-  .perk:last-child { margin-bottom: 0; }
-  .btn { display: block; width: fit-content; margin: 28px auto; background: linear-gradient(135deg, #4ade80, #22d3ee); color: white; text-decoration: none; padding: 14px 36px; border-radius: 10px; font-size: 16px; font-weight: 700; text-align: center; }
-  .footer { padding: 24px 32px; border-top: 1px solid #2a2a3e; text-align: center; }
-  .footer p { color: #4a4a6a; font-size: 12px; margin: 0; }
+  body { margin: 0; padding: 0; background: #f5f5f5; font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  .wrapper { max-width: 520px; margin: 32px auto; background: #ffffff; border-radius: 8px; border: 1px solid #e5e5e5; }
+  .header { padding: 28px 28px 0; }
+  .header h1 { font-size: 20px; font-weight: 700; color: #111; margin: 0 0 4px; }
+  .header p { font-size: 13px; color: #666; margin: 0; }
+  .body { padding: 24px 28px; }
+  .body p { color: #333; font-size: 14px; line-height: 1.7; margin: 0 0 16px; }
+  .btn { display: inline-block; background: #3b82f6; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+  .footer { padding: 20px 28px; border-top: 1px solid #eee; }
+  .footer p { color: #999; font-size: 11px; margin: 0; }
 </style>
 </head>
 <body>
 <div class="wrapper">
   <div class="header">
-    <h1>🎉 Welcome, Admin!</h1>
-    <p>Your Peerly Admin account is now active</p>
+    <h1>Welcome to the team</h1>
+    <p>Peerly Student Community</p>
   </div>
   <div class="body">
-    <div style="text-align:center">
-      <span class="badge">✅ Account Activated</span>
-    </div>
-    <p>Hi <strong style="color:#e0e0ff">{{ $adminName }}</strong>,</p>
-    <p>Congratulations! Your admin onboarding is complete. You now have full administrator access to the <strong style="color:#4ade80">Peerly</strong> platform.</p>
-    <div class="perks">
-      <div class="perk">🛡️ <span>Manage and moderate community posts</span></div>
-      <div class="perk">👥 <span>View and manage all user accounts</span></div>
-      <div class="perk">💬 <span>Delete inappropriate comments</span></div>
-      <div class="perk">📌 <span>Pin important discussions</span></div>
-    </div>
-    <p>You can access the admin panel anytime by visiting the link below. Log in with the email and password you just set.</p>
-    <a href="{{ url('/admin') }}" class="btn">Go to Admin Panel →</a>
-    <p>If you ever need help or have questions, reach out to the Super Admin at tubamirza822@gmail.com.</p>
-    <p style="color:#4ade80; font-weight:700;">— The Peerly Team</p>
+    <p>Hi {{ $adminName }},</p>
+    <p>Your admin account on <strong>Peerly</strong> is now active. You can manage users, posts, and comments from the admin panel.</p>
+    <p>Log in with the email and password you just set up:</p>
+    <p style="text-align: center; margin: 24px 0;">
+      <a href="{{ url('/admin') }}" class="btn">Go to Admin Panel</a>
+    </p>
+    <p style="color: #888; font-size: 13px;">If you have any questions, contact the Super Admin.</p>
   </div>
   <div class="footer">
-    <p>© {{ date('Y') }} Peerly — Student Community Platform</p>
+    <p>&copy; {{ date('Y') }} Peerly</p>
   </div>
 </div>
 </body>
