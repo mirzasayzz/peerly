@@ -62,15 +62,15 @@
     @endguest
 
     {{-- Sort Tabs --}}
-    <div class="flex items-center justify-between mb-16">
-        <div class="tab-nav" style="border-bottom: none; margin-bottom: 0;">
+    <div class="flex items-center justify-between mb-16 home-tabs-row">
+        <div class="tab-nav" style="border-bottom: none; margin-bottom: 0; flex: 1;">
             <a href="{{ url('/') }}" class="tab-link {{ $sort === 'trending' ? 'active' : '' }}"><i class="ph ph-fire"></i> Trending</a>
             <a href="{{ url('/?sort=new') }}" class="tab-link {{ $sort === 'new' ? 'active' : '' }}"><i class="ph ph-clock"></i> Latest</a>
             <a href="{{ url('/?sort=top') }}" class="tab-link {{ $sort === 'top' ? 'active' : '' }}"><i class="ph ph-arrow-fat-up"></i> Top</a>
             <a href="{{ url('/?sort=unanswered') }}" class="tab-link {{ $sort === 'unanswered' ? 'active' : '' }}"><i class="ph ph-question"></i> Unanswered</a>
         </div>
         @auth
-        <a href="{{ route('posts.create') }}" class="btn btn-primary btn-sm">
+        <a href="{{ route('posts.create') }}" class="btn btn-primary btn-sm" style="flex-shrink: 0;">
             <i class="ph ph-plus"></i> New Post
         </a>
         @endauth
