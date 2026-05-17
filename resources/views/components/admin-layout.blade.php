@@ -12,6 +12,83 @@
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        /* Admin sidebar */
+        .admin-sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            height: calc(100vh - var(--navbar-h));
+            position: sticky;
+            top: var(--navbar-h);
+            overflow-y: auto;
+            background: var(--bg-secondary);
+        }
+
+        /* Mobile admin nav — horizontal tab bar at top of content */
+        .admin-mobile-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                display: none;
+            }
+
+            .admin-mobile-nav {
+                display: flex;
+                gap: 4px;
+                padding: 12px;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+                border-bottom: 1px solid var(--border);
+                background: var(--bg-secondary);
+            }
+            .admin-mobile-nav::-webkit-scrollbar { display: none; }
+
+            .admin-mobile-nav a {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 14px;
+                border-radius: var(--radius-full);
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text-secondary);
+                white-space: nowrap;
+                flex-shrink: 0;
+                transition: var(--transition);
+                background: var(--bg-tertiary);
+            }
+            .admin-mobile-nav a:hover {
+                color: var(--text-primary);
+            }
+            .admin-mobile-nav a.active {
+                background: var(--accent);
+                color: white;
+            }
+
+            /* Make admin tables not break layout */
+            .admin-content table {
+                min-width: 500px;
+            }
+
+            /* Stack the manage admins form */
+            .admin-manage-form {
+                flex-direction: column !important;
+            }
+
+            /* Admin list items stack on mobile */
+            .admin-list-item {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 8px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="app-layout">
@@ -29,8 +106,8 @@
 
         {{-- Body --}}
         <div class="app-body">
-            {{-- Admin Sidebar Placeholder (if needed in future) --}}
-            <div style="width: 240px; border-right: 1px solid var(--border); padding: 24px 16px; height: calc(100vh - var(--navbar-h)); position: sticky; top: var(--navbar-h); overflow-y: auto;">
+            {{-- Desktop Sidebar --}}
+            <div class="admin-sidebar">
                 <div class="sidebar-section">
                     <div class="sidebar-title">Admin Controls</div>
                     <ul>
@@ -63,10 +140,32 @@
                 </div>
             </div>
 
-            {{-- Main Content --}}
-            <main class="app-main" style="max-width: 1200px; margin: 0 auto; width: 100%;">
-                {{ $slot }}
-            </main>
+            {{-- Main Content Area --}}
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; overflow-x: hidden;">
+                {{-- Mobile Nav Tabs (replaces sidebar on mobile) --}}
+                <div class="admin-mobile-nav">
+                    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                        <i class="ph ph-squares-four"></i> Dashboard
+                    </a>
+                    <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
+                        <i class="ph ph-users"></i> Users
+                    </a>
+                    <a href="{{ route('admin.posts.index') }}" class="{{ request()->routeIs('admin.posts.index') ? 'active' : '' }}">
+                        <i class="ph ph-article"></i> Posts
+                    </a>
+                    <a href="{{ route('admin.comments.index') }}" class="{{ request()->routeIs('admin.comments.index') ? 'active' : '' }}">
+                        <i class="ph ph-chats"></i> Comments
+                    </a>
+                    <a href="/">
+                        <i class="ph ph-arrow-u-up-left"></i> Back
+                    </a>
+                </div>
+
+                {{-- Page Content --}}
+                <main class="app-main admin-content" style="max-width: 1200px; width: 100%;">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
 
     </div>

@@ -291,20 +291,24 @@ input, textarea, select { font: inherit; color: inherit; background: transparent
 }
 
 @media (max-width: 640px) {
+  /* === Global / Layout === */
   .navbar { padding: 0 12px; max-width: 100vw; overflow: hidden; }
   .navbar-brand span { display: none; }
   .navbar-actions { gap: 4px; flex-shrink: 0; }
-  /* Hide New Post button in navbar on mobile — it shows in the tabs row */
   .navbar-actions #new-post-btn { display: none; }
   .navbar-actions .btn:not(#new-post-btn) { padding: 6px 10px; font-size: 13px; }
   .navbar-center { display: none; }
   .app-main { padding: 12px; }
-  /* Tabs row: stack vertically so New Post btn doesn't overflow */
+  .container { padding: 0 12px; }
+
+  /* === Home — Tabs Row === */
   .home-tabs-row { flex-direction: column; align-items: flex-start !important; gap: 8px !important; }
   .home-tabs-row .tab-nav { width: 100%; border-bottom: 1px solid var(--border); }
   .home-tabs-row .btn { align-self: flex-end; }
   .tab-link { padding: 8px 12px; font-size: 13px; }
   .tab-link i { display: none; }
+
+  /* === Post Cards === */
   .post-card { padding: 12px; flex-direction: column; gap: 10px; }
   .post-card .post-content { order: 1; }
   .post-card .vote-col { display: flex; flex-direction: row; order: 2; align-items: center; gap: 12px; min-width: auto; margin-top: 0; background: var(--bg-tertiary); padding: 4px 8px; border-radius: var(--radius-full); width: max-content; }
@@ -312,16 +316,58 @@ input, textarea, select { font: inherit; color: inherit; background: transparent
   .post-card .post-title { font-size: 15px; }
   .post-card .post-excerpt { font-size: 13px; }
   .post-card .post-meta { gap: 10px; font-size: 12px; }
-  .stat-row { gap: 12px; }
+
+  /* === Post Detail (show page) === */
+  .show-layout { flex-direction: column; gap: 16px !important; }
+  .show-layout .vote-col { position: static !important; display: flex; flex-direction: row; align-items: center; gap: 16px; margin-bottom: 0; background: var(--bg-tertiary); padding: 8px 16px; border-radius: var(--radius-full); width: max-content; }
+  .show-layout .vote-col > div { margin-top: 0 !important; border-top: none !important; padding-top: 0 !important; border-left: 1px solid var(--border); padding-left: 16px; }
+  .show-layout h1 { font-size: 20px !important; }
+
+  /* === Breadcrumbs === */
+  .breadcrumb { overflow-x: auto; white-space: nowrap; scrollbar-width: none; font-size: 12px; }
+  .breadcrumb::-webkit-scrollbar { display: none; }
+
+  /* === Forums / Category Cards === */
+  .category-card { flex-wrap: wrap; padding: 12px; gap: 10px; }
+  .category-card .category-icon { width: 36px; height: 36px; font-size: 16px; }
+  .category-card .category-info h3 { font-size: 14px; }
+  .category-card .category-info p { font-size: 12px; }
+
+  /* === Comments === */
+  .comment-item { padding: 12px; gap: 8px; }
+  .comment-replies { margin-left: 16px; padding-left: 12px; }
+  .comment-actions { flex-wrap: wrap; gap: 8px !important; }
+
+  /* === Profile === */
+  .stat-row { gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .stat-value { font-size: 18px; }
   .profile-info { flex-direction: column; align-items: center; text-align: center; margin-top: -32px; }
   .profile-cover { height: 120px; }
-  .container { padding: 0 12px; }
-  .show-layout { flex-direction: column; }
-  .show-layout .vote-col { position: static !important; display: flex; flex-direction: row; align-items: center; gap: 16px; margin-bottom: 16px; background: var(--bg-tertiary); padding: 8px 16px; border-radius: var(--radius-full); width: max-content; }
-  .show-layout .vote-col > div { margin-top: 0 !important; border-top: none !important; padding-top: 0 !important; border-left: 1px solid var(--border); padding-left: 16px; }
+  .profile-details h1 { font-size: 18px; }
+
+  /* === Cards & Overflow === */
+  .card, .card-flat, .card-glass { max-width: 100%; overflow-x: auto; }
+  .card-flat { padding: 12px; }
+
+  /* === Flash Messages === */
+  .flash-message { left: 12px; right: 12px; top: 72px; font-size: 13px; padding: 10px 14px; }
+
+  /* === Headings === */
+  h1 { font-size: 20px !important; }
+  h2 { font-size: 17px !important; }
+
+  /* === Forms === */
+  .form-group { margin-bottom: 14px; }
+
+  /* === Dropdown === */
+  .dropdown-menu { min-width: 180px; right: 0; }
+
+  /* === Tag list wrapping === */
+  .tag-list { gap: 4px; }
+  .tag { font-size: 11px; padding: 2px 8px; }
+
+  /* === Hidden on mobile === */
   .hidden-mobile { display: none !important; }
-  /* Prevent cards and content from overflowing */
-  .card, .card-flat, .card-glass { max-width: 100%; }
 }
 
 /* --- Utility --- */

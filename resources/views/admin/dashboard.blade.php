@@ -1,5 +1,5 @@
 <x-admin-layout>
-    <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 24px;">
+    <h1 style="font-size: 22px; font-weight: 700; margin-bottom: 24px;">
         <i class="ph ph-shield-check" style="color: var(--accent);"></i> Admin Dashboard
     </h1>
 
@@ -9,7 +9,7 @@
         </div>
     @endif
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 32px;">
         <div class="card" style="text-align: center;">
             <div style="font-size: 32px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                 {{ \App\Models\User::count() }}
@@ -33,7 +33,7 @@
     @if(auth()->user()->email === 'tubamirza822@gmail.com')
         <div class="card mb-24">
             <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Manage Administrators</h2>
-            <form action="{{ route('admin.manage.add') }}" method="POST" style="display: flex; gap: 12px; margin-bottom: 24px;">
+            <form action="{{ route('admin.manage.add') }}" method="POST" class="admin-manage-form" style="display: flex; gap: 12px; margin-bottom: 24px;">
                 @csrf
                 <input type="email" name="email" placeholder="User's email address" required style="flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-tertiary); color: var(--text-primary);">
                 <button type="submit" class="btn btn-primary" style="background: var(--accent); color: white;">Add Admin</button>
@@ -41,7 +41,7 @@
 
             <div style="border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
                 @foreach($admins as $adminUser)
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border);">
+                    <div class="admin-list-item" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border);">
                         <div>
                             <span style="font-weight: 600;">{{ $adminUser->name }}</span> 
                             <span class="text-muted" style="margin-left: 8px;">{{ $adminUser->email }}</span>
@@ -60,7 +60,7 @@
                 @endforeach
 
                 @foreach($pendingInvites as $invite)
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); opacity: 0.75;">
+                    <div class="admin-list-item" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); opacity: 0.75;">
                         <div>
                             <span style="font-weight: 600; color: var(--text-secondary);">{{ $invite->email }}</span>
                             <span class="badge" style="background: rgba(234,179,8,0.12); color: #eab308; font-size: 11px; margin-left: 8px; padding: 2px 6px; border-radius: 4px;">⏳ Invite Pending</span>
