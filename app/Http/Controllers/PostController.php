@@ -26,7 +26,7 @@ class PostController extends Controller
             'forum_id' => 'required|exists:forums,id',
             'tags' => 'array|max:5',
             'tags.*' => 'exists:tags,id',
-            'image' => 'nullable|image|max:5120', // 5MB max
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,pdf,doc,docx|max:5120', // 5MB max
         ]);
 
         $imagePath = null;

@@ -16,12 +16,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // --- Admin User ---
-        $admin = User::create([
-            'name' => 'Tuba Mirza',
-            'username' => 'tuba',
-            'email' => 'tuba@peerly.com',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
+        $admin = User::firstOrCreate(
+            ['email' => 'tubamirza822@gmail.com'],
+            [
+                'name' => 'Tuba Mirza',
+                'username' => 'tuba_mirza',
+                'password' => bcrypt('Azuba@89'),
+                'role' => 'admin',
             'reputation' => 500,
             'bio' => 'CS student & Peerly admin. Passionate about building community.',
             'university' => 'FAST NUCES',

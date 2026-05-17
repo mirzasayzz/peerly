@@ -1,17 +1,54 @@
 <x-app-layout>
     {{-- Hero Section --}}
     @guest
-    <div class="card-glass" style="background: var(--gradient); padding: 40px 32px; margin-bottom: 28px; text-align: center;">
-        <h1 style="font-size: 28px; font-weight: 800; color: white; margin-bottom: 8px;">Welcome to Peerly 🎓</h1>
-        <p style="color: rgba(255,255,255,0.8); font-size: 15px; max-width: 500px; margin: 0 auto;">
-            Your community hub to discuss, share resources, and connect with fellow students.
-        </p>
-        <div style="margin-top: 20px;">
-            <a href="{{ route('register') }}" class="btn" style="background: white; color: var(--accent); font-weight: 600;">
-                <i class="ph ph-user-plus"></i> Join the Community
-            </a>
+    <div class="card-glass hero-section" style="background: var(--gradient); padding: 40px 40px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 30px; overflow: hidden; position: relative; border-radius: var(--radius-xl);">
+        <div style="flex: 1; min-width: 300px; text-align: left; z-index: 2; display: flex; flex-direction: column; justify-content: center;">
+            <h1 style="font-size: 34px; font-weight: 800; color: white; margin-bottom: 16px; line-height: 1.2; letter-spacing: -0.5px;">Welcome to Peerly 🎓</h1>
+            <p style="color: rgba(255,255,255,0.95); font-size: 16px; max-width: 480px; margin-bottom: 28px; line-height: 1.6;">
+                Your ultimate community hub to ask questions, share academic resources, and connect with fellow students worldwide.
+            </p>
+            <div>
+                <a href="{{ route('register') }}" class="btn hero-btn" style="background: white; color: var(--accent); font-weight: 700; padding: 14px 28px; font-size: 16px; border-radius: var(--radius-lg); transition: all 0.3s ease; display: inline-flex; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="ph ph-users" style="font-size: 20px; margin-right: 6px;"></i> Join the Community
+                </a>
+            </div>
         </div>
+        <div style="flex: 1; min-width: 300px; z-index: 2; display: flex; justify-content: center; align-items: center;">
+            <img src="{{ asset('images/peerlycommunity.png') }}" alt="Peerly Community" style="max-width: 100%; height: auto; max-height: 280px; object-fit: contain; filter: drop-shadow(0px 15px 25px rgba(0,0,0,0.15)); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);" class="hero-image">
+        </div>
+        <!-- Decorative background elements -->
+        <div style="position: absolute; top: -50px; right: 10%; width: 250px; height: 250px; background: rgba(255,255,255,0.15); border-radius: 50%; filter: blur(30px); z-index: 1; pointer-events: none;"></div>
+        <div style="position: absolute; bottom: -80px; left: -20px; width: 200px; height: 200px; background: rgba(0,0,0,0.1); border-radius: 50%; filter: blur(40px); z-index: 1; pointer-events: none;"></div>
     </div>
+    
+    <style>
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2) !important;
+            background: #f8fafc !important;
+        }
+        .hero-btn:active {
+            transform: translateY(0);
+        }
+        .hero-image:hover {
+            transform: scale(1.08) translateY(-8px);
+        }
+        @media (max-width: 860px) {
+            .hero-section {
+                text-align: center !important;
+                flex-direction: column-reverse;
+                padding: 32px 24px !important;
+                gap: 20px !important;
+            }
+            .hero-section > div:first-child {
+                text-align: center !important;
+                align-items: center;
+            }
+            .hero-image {
+                max-height: 220px !important;
+            }
+        }
+    </style>
     @endguest
 
     {{-- Sort Tabs --}}
@@ -47,7 +84,7 @@
                 </div>
 
                 {{-- Post Content --}}
-                <div class="post-content">
+                <div class="post-content" onclick="window.location='{{ route('posts.show', $post->slug) }}'" style="cursor: pointer;">
                     <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                         @if($post->is_pinned)
                             <span class="tag" style="background: var(--warning-soft); color: var(--warning); font-size: 11px;">
@@ -63,7 +100,7 @@
 
                     <a href="{{ route('posts.show', $post->slug) }}" class="post-title">{{ $post->title }}</a>
 
-                    <p class="post-excerpt">{{ Str::limit(strip_tags($post->body), 150) }}</p>
+                    <p class="post-excerpt" style="pointer-events: none;">{{ Str::limit(strip_tags($post->body), 150) }}</p>
 
                     <div class="tag-list mb-8">
                         @foreach($post->tags as $tag)

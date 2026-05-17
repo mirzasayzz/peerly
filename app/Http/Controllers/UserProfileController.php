@@ -9,9 +9,13 @@ class UserProfileController extends Controller
 {
     public function show(string $username)
     {
-        $user = User::where('username', $username)
-            ->orWhere('id', $username)
-            ->firstOrFail();
+        $query = User::where('username', $username);
+        
+        if (is_numeric($username)) {
+            $query->orWhere('id', $username);
+        }
+
+        $user = $query->firstOrFail();
 
         $posts = $user->posts()
             ->with(['forum', 'tags'])

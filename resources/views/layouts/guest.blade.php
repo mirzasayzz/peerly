@@ -22,7 +22,10 @@
 </head>
 <body>
     <div class="auth-page">
-        <div class="auth-card fade-in">
+        <div class="auth-card fade-in" style="position: relative;">
+            <button onclick="window.history.length > 1 ? window.history.back() : window.location.href = '{{ url('/') }}'" style="position: absolute; top: 20px; right: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--text-tertiary); transition: all 0.2s ease; background: var(--bg-tertiary);" onmouseover="this.style.color='var(--text-primary)'; this.style.transform='scale(1.1)';" onmouseout="this.style.color='var(--text-tertiary)'; this.style.transform='scale(1)';">
+                <i class="ph ph-x" style="font-size: 18px;"></i>
+            </button>
             <div class="auth-logo">
                 <img src="{{ asset('images/peerly.png') }}" alt="Peerly Logo" style="height: 40px; width: auto;">
                 Peerly

@@ -18,7 +18,19 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:50', 'alpha_dash', Rule::unique(User::class)->ignore($this->user()->id)],
+            'username' => [
+                'required', 'string', 'max:50', 'regex:/^[a-zA-Z0-9_]+$/', 
+                Rule::unique(User::class)->ignore($this->user()->id),
+                function ($attribute, $value, $fail) {
+                    $user = $this->user();
+                    if ($user->username !== $value) {
+                        if ($user->username_changed_at && $user->username_changed_at->copy()->addDays(90)->isFuture()) {
+                            $daysLeft = now()->diffInDays($user->username_changed_at->copy()->addDays(90)) + 1;
+                            $fail("You can only change your username once every 90 days. Please wait {$daysLeft} more days.");
+                        }
+                    }
+                }
+            ],
             'email' => [
                 'required',
                 'string',

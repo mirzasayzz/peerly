@@ -7,8 +7,8 @@
         <span style="color: var(--text-primary);">{{ Str::limit($post->title, 40) }}</span>
     </div>
 
-    <div class="flex gap-24" style="align-items: flex-start;">
-        {{-- Vote Sidebar (Desktop) --}}
+    <div class="flex gap-24 show-layout" style="align-items: flex-start;">
+        {{-- Vote Sidebar (Desktop/Mobile row) --}}
         <div class="vote-col" data-voteable="post-{{ $post->id }}" style="position: sticky; top: 88px; padding-top: 8px;">
             <button class="vote-btn vote-up {{ $post->user_vote === 1 ? 'active-up' : '' }}" onclick="vote('post', {{ $post->id }}, 1)">
                 <i class="ph-bold ph-arrow-fat-up" style="font-size: 20px;"></i>
@@ -66,9 +66,24 @@
                 {{-- Post Body --}}
                 <div style="font-size: 15px; line-height: 1.8; color: var(--text-primary);">
                     @if($post->image_url)
-                        <div style="margin-bottom: 24px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border);">
-                            <img src="{{ $post->image_url }}" alt="Attachment" style="max-width: 100%; height: auto; display: block;">
-                        </div>
+                        @php
+                            $ext = strtolower(pathinfo($post->image_path, PATHINFO_EXTENSION));
+                            $isDoc = in_array($ext, ['pdf', 'doc', 'docx']);
+                        @endphp
+                        
+                        @if($isDoc)
+                            <div style="margin-bottom: 24px; padding: 16px; border-radius: var(--radius-md); background: var(--bg-tertiary); border: 1px solid var(--border); display: flex; align-items: center; gap: 12px;">
+                                <i class="ph ph-file-text" style="font-size: 32px; color: var(--accent);"></i>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text-primary);">Attached Document</div>
+                                    <a href="{{ $post->image_url }}" target="_blank" style="font-size: 14px; color: var(--accent); display: inline-flex; align-items: center; gap: 4px;"><i class="ph ph-download-simple"></i> Download File</a>
+                                </div>
+                            </div>
+                        @else
+                            <div style="margin-bottom: 24px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border);">
+                                <img src="{{ $post->image_url }}" alt="Attachment" style="max-width: 100%; height: auto; display: block;">
+                            </div>
+                        @endif
                     @endif
                     {!! nl2br(e($post->body)) !!}
                 </div>

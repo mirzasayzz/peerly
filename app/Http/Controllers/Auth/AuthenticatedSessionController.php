@@ -26,6 +26,14 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            Auth::logout();
+            return redirect()->back()->withErrors([
+                'email' => 'Administrators must use the dedicated admin portal to log in.',
+            ]);
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(route('home', absolute: false));

@@ -15,9 +15,22 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'avatar',
-        'bio', 'university', 'major', 'year', 'role',
-        'reputation', 'last_seen_at', 'github', 'linkedin', 'website',
+        'name',
+        'email',
+        'password',
+        'username',
+        'avatar',
+        'bio',
+        'university',
+        'major',
+        'year',
+        'username_changed_at',
+        'role',
+        'reputation',
+        'last_seen_at',
+        'github',
+        'linkedin',
+        'website',
     ];
 
     protected $hidden = [
@@ -88,7 +101,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAvatarUrlAttribute(): string
     {
         if ($this->avatar) {
-            // Using Storage facade works for both local and S3
+            if (str_starts_with($this->avatar, 'http')) {
+                return $this->avatar;
+            }
             return \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->url($this->avatar);
         }
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=7c5cfc&color=fff&size=128';

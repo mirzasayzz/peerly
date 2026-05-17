@@ -13,14 +13,30 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+
+        <div>
+            <x-input-label for="avatar" :value="__('Profile Picture')" />
+            @if($user->avatar)
+                <img src="{{ str_starts_with($user->avatar, 'http') ? $user->avatar : Storage::url($user->avatar) }}" alt="Avatar" class="w-20 h-20 rounded-full object-cover mb-4">
+            @endif
+            <input id="avatar" name="avatar" type="file" class="mt-1 block w-full text-sm text-gray-500" accept="image/*" />
+            <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
+        </div>
+
+        <div>
+            <x-input-label for="username" :value="__('Username')" />
+            <x-text-input id="username" name="username" type="text" class="mt-1 block w-full" :value="old('username', $user->username)" required autocomplete="username" />
+            <p class="text-xs text-gray-500 mt-1">Only letters, numbers, and underscores (_) are allowed. You can only change your username once every 90 days.</p>
+            <x-input-error class="mt-2" :messages="$errors->get('username')" />
         </div>
 
         <div>

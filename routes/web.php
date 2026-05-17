@@ -25,7 +25,7 @@ Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
 Route::get('/@{username}', [UserProfileController::class, 'show'])->name('profile.show');
 
 // Auth & Verified Routes (Users must confirm email to post)
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     // Posts CRUD
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
@@ -58,11 +58,74 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin
-Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+// Admin Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Admin Guest Routes
+    Route::middleware('guest')->group(function () {
+        Route::get('login', [\App\Http\Controllers\Admin\AuthController::class, 'showLoginForm'])->name('login');
+        Route::post('login', [\App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login.submit');
+    });
+
+    // Admin Authenticated Routes
+    Route::middleware('auth')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+
+        Route::post('/manage-admins', function (\Illuminate\Http\Request $request) {
+            if (auth()->user()->email !== 'tubamirza822@gmail.com') abort(403);
+            $request->validate(['email' => 'required|email']);
+            
+            $user = \App\Models\User::where('email', $request->email)->first();
+            
+            if (!$user) {
+                // Auto-generate a username
+                $baseUsername = \Illuminate\Support\Str::slug(explode('@', $request->email)[0], '_');
+                $username = preg_replace('/[^A-Za-z0-9_]/', '', $baseUsername);
+                $counter = 1;
+                while (\App\Models\User::where('username', $username)->exists()) {
+                    $username = $baseUsername . $counter++;
+                }
+
+                $user = \App\Models\User::create([
+                    'name' => 'New Admin',
+                    'email' => $request->email,
+                    'username' => $username,
+                    'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(16)),
+                    'role' => 'admin',
+                    'email_verified_at' => now(),
+                ]);
+
+                // Generate Password Reset Token
+                $token = \Illuminate\Support\Facades\Password::getRepository()->create($user);
+                $resetLink = url(route('password.reset', ['token' => $token, 'email' => $user->email], false));
+
+                // Send Welcome Email
+                \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\AdminWelcomeMail($resetLink));
+                
+                return back()->with('status', 'New admin account created and welcome email sent successfully!');
+            } else {
+                $user->role = 'admin';
+                $user->save();
+                return back()->with('status', 'Existing user promoted to admin successfully.');
+            }
+        })->name('manage.add');
+
+        Route::delete('/manage-admins/{user}', function (\App\Models\User $user) {
+            if (auth()->user()->email !== 'tubamirza822@gmail.com') abort(403);
+            if ($user->email === 'tubamirza822@gmail.com') abort(403, 'Cannot remove super admin.');
+            $user->role = 'student'; // Demote back to student
+            $user->save();
+            return back()->with('status', 'Admin removed successfully.');
+        })->name('manage.remove');
+
+        Route::get('/users', [\App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users.index');
+        Route::get('/posts', [\App\Http\Controllers\Admin\DashboardController::class, 'posts'])->name('posts.index');
+        Route::get('/comments', [\App\Http\Controllers\Admin\DashboardController::class, 'comments'])->name('comments.index');
+
+        Route::delete('/users/{user}', [\App\Http\Controllers\Admin\DashboardController::class, 'deleteUser'])->name('users.destroy');
+        Route::delete('/posts/{post}', [\App\Http\Controllers\Admin\DashboardController::class, 'deletePost'])->name('posts.destroy');
+        Route::post('/posts/{post}/pin', [\App\Http\Controllers\Admin\DashboardController::class, 'togglePinPost'])->name('posts.pin');
+        Route::delete('/comments/{comment}', [\App\Http\Controllers\Admin\DashboardController::class, 'deleteComment'])->name('comments.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';
