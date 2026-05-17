@@ -14,13 +14,52 @@
                 @csrf @method('patch')
 
                 <div class="form-group mb-24">
-                    <label class="form-label" for="avatar">Profile Picture</label>
-                    <div style="display: flex; align-items: center; gap: 16px;">
-                        <img src="{{ $user->avatar_url }}" alt="Avatar" style="width: 64px; height: 64px; border-radius: var(--radius-full); object-fit: cover; border: 2px solid var(--border);">
-                        <input type="file" name="avatar" id="avatar" class="form-control" accept="image/*" style="padding-top: 8px;">
+                    <label class="form-label">Profile Picture</label>
+                    <div style="display: flex; align-items: center; gap: 20px;">
+
+                        {{-- Clickable avatar with hover overlay --}}
+                        <div id="avatar-wrapper" onclick="document.getElementById('avatar').click()"
+                             style="position: relative; width: 80px; height: 80px; border-radius: 50%; cursor: pointer; flex-shrink: 0;">
+                            <img id="avatar-preview"
+                                 src="{{ $user->avatar_url }}"
+                                 alt="Avatar"
+                                 style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); display: block;">
+                            {{-- Hover overlay --}}
+                            <div id="avatar-overlay"
+                                 style="position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.55); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; pointer-events: none;">
+                                <i class="ph ph-camera" style="color: white; font-size: 22px;"></i>
+                                <span style="color: white; font-size: 10px; font-weight: 600; margin-top: 3px;">Change</span>
+                            </div>
+                        </div>
+
+                        {{-- Preview text + hidden file input --}}
+                        <div>
+                            <p id="avatar-filename" style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 4px;">Click your photo to change it</p>
+                            <p style="font-size: 12px; color: var(--text-tertiary);">JPG, PNG or GIF · max 3 MB</p>
+                        </div>
+
+                        <input type="file" name="avatar" id="avatar" accept="image/*" style="display: none;">
                     </div>
-                    @error('avatar') <div class="form-error mt-4">{{ $message }}</div> @enderror
+                    @error('avatar') <div class="form-error mt-8">{{ $message }}</div> @enderror
                 </div>
+
+                <style>
+                    #avatar-wrapper:hover #avatar-overlay { opacity: 1; }
+                    #avatar-wrapper:hover { box-shadow: 0 0 0 3px var(--accent); border-radius: 50%; }
+                </style>
+                <script>
+                    document.getElementById('avatar').addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            document.getElementById('avatar-preview').src = ev.target.result;
+                            document.getElementById('avatar-filename').textContent = '✓ ' + file.name + ' selected';
+                            document.getElementById('avatar-filename').style.color = 'var(--success)';
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                </script>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div class="form-group">
