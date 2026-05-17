@@ -116,12 +116,12 @@
                     <textarea name="body" class="form-textarea" placeholder="Write your reply..." rows="3" required>{{ old('body') }}</textarea>
                     @error('body') <div class="form-error">{{ $message }}</div> @enderror
                     
-                    <div class="flex justify-between items-center mt-8">
-                        <div>
-                            <input type="file" name="image" id="image" class="text-sm text-muted" accept="image/*">
+                    <div class="flex justify-between items-center mt-8" style="flex-wrap: wrap; gap: 12px;">
+                        <div style="max-width: 100%;">
+                            <input type="file" name="image" id="image" class="text-sm text-muted" accept="image/*" style="max-width: 100%;">
                             @error('image') <div class="form-error mt-4">{{ $message }}</div> @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm"><i class="ph ph-paper-plane-tilt"></i> Post Reply</button>
+                        <button type="submit" class="btn btn-primary btn-sm" style="flex-shrink: 0;"><i class="ph ph-paper-plane-tilt"></i> Post Reply</button>
                     </div>
                 </form>
                 @endif

@@ -56,7 +56,7 @@
                 @error('tags') <div class="form-error">{{ $message }}</div> @enderror
             </div>
 
-            <div class="flex justify-between items-center" style="padding-top: 16px; border-top: 1px solid var(--border);">
+            <div class="flex justify-between items-center" style="padding-top: 16px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 12px;">
                 <a href="{{ url()->previous() }}" class="btn btn-ghost">Cancel</a>
                 <button type="submit" class="btn btn-gradient">
                     <i class="ph ph-paper-plane-tilt"></i> Publish Post

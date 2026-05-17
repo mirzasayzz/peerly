@@ -292,7 +292,7 @@ input, textarea, select { font: inherit; color: inherit; background: transparent
 
 @media (max-width: 640px) {
   /* === Global / Layout === */
-  .navbar { padding: 0 12px; max-width: 100vw; overflow: hidden; }
+  .navbar { padding: 0 12px; max-width: 100vw; overflow-x: hidden; }
   .navbar-brand span { display: none; }
   .navbar-actions { gap: 4px; flex-shrink: 0; }
   .navbar-actions #new-post-btn { display: none; }
