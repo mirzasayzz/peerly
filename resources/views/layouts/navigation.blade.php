@@ -36,7 +36,7 @@
             </a>
 
             <div class="dropdown">
-                <button class="btn-icon btn-ghost" onclick="toggleDropdown('user-menu')" id="user-menu-btn">
+                <button class="btn-icon btn-ghost" onclick="toggleDropdown('user-menu'); event.stopPropagation();" id="user-menu-btn">
                     <img src="{{ auth()->user()->avatar_url }}" alt="Avatar" class="avatar avatar-sm">
                 </button>
                 <div class="dropdown-menu" id="user-menu">
