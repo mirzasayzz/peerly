@@ -25,13 +25,46 @@
         <div class="form-group">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
             <x-text-input id="password_confirmation" class="form-input" type="password" name="password_confirmation" required autocomplete="new-password" />
+            <p id="password-match-msg" style="font-size: 12px; margin-top: 5px; display: none;"></p>
             <x-input-error :messages="$errors->get('password_confirmation')" class="form-error mt-4" />
         </div>
 
         <div class="mt-24">
-            <button type="submit" class="btn btn-primary w-full" style="height: 44px; font-size: 15px;">
+            <button type="submit" id="submit-btn" class="btn btn-primary w-full" style="height: 44px; font-size: 15px;">
                 {{ __('Create Account') }}
             </button>
         </div>
     </form>
+
+    <script>
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('password_confirmation');
+        const matchMsg = document.getElementById('password-match-msg');
+        const submitBtn = document.getElementById('submit-btn');
+
+        function checkPasswords() {
+            if (confirmPassword.value.length === 0) {
+                matchMsg.style.display = 'none';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                return;
+            }
+            
+            matchMsg.style.display = 'block';
+            if (password.value === confirmPassword.value) {
+                matchMsg.textContent = '✓ Passwords match';
+                matchMsg.style.color = '#4ade80';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            } else {
+                matchMsg.textContent = '✗ Passwords do not match';
+                matchMsg.style.color = 'var(--danger)';
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+            }
+        }
+
+        password.addEventListener('input', checkPasswords);
+        confirmPassword.addEventListener('input', checkPasswords);
+    </script>
 </x-guest-layout>

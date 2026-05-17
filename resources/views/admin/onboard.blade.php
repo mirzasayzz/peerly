@@ -77,12 +77,45 @@
                 <input type="password" id="password_confirmation" name="password_confirmation" class="form-input"
                        placeholder="Repeat your password" required
                        style="width:100%; height:44px; padding: 0 14px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); font-size: 14px; box-sizing:border-box;">
+                <p id="password-match-msg" style="font-size: 12px; margin-top: 5px; display: none;"></p>
             </div>
 
-            <button type="submit" class="btn btn-primary w-full" style="height: 48px; font-size: 15px; font-weight: 700; margin-top: 8px;">
+            <button type="submit" id="submit-btn" class="btn btn-primary w-full" style="height: 48px; font-size: 15px; font-weight: 700; margin-top: 8px;">
                 <i class="ph ph-check-circle"></i> Activate My Admin Account
             </button>
         </form>
+
+        <script>
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('password_confirmation');
+            const matchMsg = document.getElementById('password-match-msg');
+            const submitBtn = document.getElementById('submit-btn');
+
+            function checkPasswords() {
+                if (confirmPassword.value.length === 0) {
+                    matchMsg.style.display = 'none';
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    return;
+                }
+                
+                matchMsg.style.display = 'block';
+                if (password.value === confirmPassword.value) {
+                    matchMsg.textContent = '✓ Passwords match';
+                    matchMsg.style.color = '#4ade80';
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                } else {
+                    matchMsg.textContent = '✗ Passwords do not match';
+                    matchMsg.style.color = 'var(--danger)';
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = '0.5';
+                }
+            }
+
+            password.addEventListener('input', checkPasswords);
+            confirmPassword.addEventListener('input', checkPasswords);
+        </script>
 
         <p style="text-align: center; font-size: 12px; color: var(--text-tertiary); margin-top: 20px;">
             Once activated, you'll receive a confirmation email and be redirected to log in.

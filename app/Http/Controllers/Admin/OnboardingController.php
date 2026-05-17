@@ -40,23 +40,45 @@ class OnboardingController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Generate a unique username from name
-        $baseUsername = Str::slug($request->name, '_');
-        $username = preg_replace('/[^A-Za-z0-9_]/', '', $baseUsername);
-        $counter = 1;
-        while (User::where('username', $username)->exists()) {
-            $username = $baseUsername . $counter++;
-        }
+        // Check if user already exists
+        $user = User::where('email', $invitation->email)->first();
 
-        // Create the admin user
-        $user = User::create([
-            'name'              => $request->name,
-            'email'             => $invitation->email,
-            'username'          => $username,
-            'password'          => Hash::make($request->password),
-            'role'              => 'admin',
-            'email_verified_at' => now(),
-        ]);
+        if ($user) {
+            // Use existing username if present, otherwise generate a unique one
+            if (empty($user->username)) {
+                $baseUsername = Str::slug($request->name, '_');
+                $username = preg_replace('/[^A-Za-z0-9_]/', '', $baseUsername);
+                $counter = 1;
+                while (User::where('username', $username)->exists()) {
+                    $username = $baseUsername . $counter++;
+                }
+                $user->username = $username;
+            }
+
+            $user->name = $request->name;
+            $user->password = Hash::make($request->password);
+            $user->role = 'admin';
+            $user->email_verified_at = now();
+            $user->save();
+        } else {
+            // Generate a unique username for a new user
+            $baseUsername = Str::slug($request->name, '_');
+            $username = preg_replace('/[^A-Za-z0-9_]/', '', $baseUsername);
+            $counter = 1;
+            while (User::where('username', $username)->exists()) {
+                $username = $baseUsername . $counter++;
+            }
+
+            $user = new User([
+                'name'     => $request->name,
+                'email'    => $invitation->email,
+                'username' => $username,
+                'password' => Hash::make($request->password),
+                'role'     => 'admin',
+            ]);
+            $user->email_verified_at = now();
+            $user->save();
+        }
 
         // Mark invitation as completed
         $invitation->update(['status' => 'completed']);

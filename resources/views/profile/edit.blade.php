@@ -145,13 +145,46 @@
                     <div class="form-group">
                         <label class="form-label" for="password_confirmation">Confirm Password</label>
                         <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="••••••••" autocomplete="new-password">
+                        <p id="password-match-msg" style="font-size: 12px; margin-top: 5px; display: none;"></p>
                     </div>
                 </div>
 
                 <div style="text-align: right; padding-top: 16px; border-top: 1px solid var(--border);">
-                    <button type="submit" class="btn btn-primary"><i class="ph ph-key"></i> Update Password</button>
+                    <button type="submit" id="submit-btn" class="btn btn-primary"><i class="ph ph-key"></i> Update Password</button>
                 </div>
             </form>
+
+            <script>
+                const password = document.getElementById('password');
+                const confirmPassword = document.getElementById('password_confirmation');
+                const matchMsg = document.getElementById('password-match-msg');
+                const submitBtn = document.getElementById('submit-btn');
+
+                function checkPasswords() {
+                    if (confirmPassword.value.length === 0) {
+                        matchMsg.style.display = 'none';
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                        return;
+                    }
+                    
+                    matchMsg.style.display = 'block';
+                    if (password.value === confirmPassword.value) {
+                        matchMsg.textContent = '✓ Passwords match';
+                        matchMsg.style.color = '#4ade80';
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                    } else {
+                        matchMsg.textContent = '✗ Passwords do not match';
+                        matchMsg.style.color = 'var(--danger)';
+                        submitBtn.disabled = true;
+                        submitBtn.style.opacity = '0.5';
+                    }
+                }
+
+                password.addEventListener('input', checkPasswords);
+                confirmPassword.addEventListener('input', checkPasswords);
+            </script>
         </div>
 
         {{-- Delete Account --}}
