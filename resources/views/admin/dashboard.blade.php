@@ -64,8 +64,13 @@
                         <div>
                             <span style="font-weight: 600; color: var(--text-secondary);">{{ $invite->email }}</span>
                             <span class="badge" style="background: rgba(234,179,8,0.12); color: #eab308; font-size: 11px; margin-left: 8px; padding: 2px 6px; border-radius: 4px;">⏳ Invite Pending</span>
-                            <span style="font-size: 12px; color: var(--text-tertiary); margin-left: 8px;">Expires {{ $invite->expires_at->diffForHumans() }}</span>
+                            <span style="font-size: 12px; color: var(--text-tertiary); margin-left: 8px; display: inline-block;">Expires {{ $invite->expires_at->diffForHumans() }}</span>
                         </div>
+                        <form action="{{ route('admin.manage.revoke', $invite) }}" method="POST" onsubmit="return confirm('Revoke this pending invitation?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm" style="color: var(--danger); background: var(--danger-soft);">Remove</button>
+                        </form>
                     </div>
                 @endforeach
 

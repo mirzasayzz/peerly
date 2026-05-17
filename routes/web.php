@@ -112,6 +112,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             return back()->with('status', 'Admin removed successfully.');
         })->name('manage.remove');
 
+        Route::delete('/manage-admins/invite/{invite}', function (\App\Models\AdminInvitation $invite) {
+            if (auth()->user()->email !== 'tubamirza822@gmail.com') abort(403);
+            $invite->delete();
+            return back()->with('status', 'Pending invite revoked successfully.');
+        })->name('manage.revoke');
+
+
         Route::get('/users', [\App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users.index');
         Route::get('/posts', [\App\Http\Controllers\Admin\DashboardController::class, 'posts'])->name('posts.index');
         Route::get('/comments', [\App\Http\Controllers\Admin\DashboardController::class, 'comments'])->name('comments.index');
