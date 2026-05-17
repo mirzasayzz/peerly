@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminInvitation;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,14 +17,21 @@ class DashboardController extends Controller
         }
         
         $admins = User::where('role', 'admin')->get();
-        return view('admin.dashboard', compact('admins'));
+        $pendingInvites = AdminInvitation::where('status', 'pending')
+            ->where('expires_at', '>', now())
+            ->get();
+        return view('admin.dashboard', compact('admins', 'pendingInvites'));
     }
 
     public function users()
     {
         if (auth()->user()->role !== 'admin') abort(403);
         $users = User::orderBy('created_at', 'desc')->paginate(15);
-        return view('admin.users', compact('users'));
+        // Collect emails that have a pending (not yet completed) invite
+        $pendingEmails = AdminInvitation::where('status', 'pending')
+            ->where('expires_at', '>', now())
+            ->pluck('email');
+        return view('admin.users', compact('users', 'pendingEmails'));
     }
 
     public function posts()

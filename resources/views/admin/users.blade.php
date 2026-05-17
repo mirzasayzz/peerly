@@ -25,6 +25,7 @@
                 </thead>
                 <tbody>
                     @foreach($users as $u)
+                        @php $pendingInvite = $pendingEmails->contains($u->email); @endphp
                         <tr style="border-bottom: 1px solid var(--border-light);">
                             <td style="padding: 12px;">
                                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -34,7 +35,9 @@
                             </td>
                             <td style="padding: 12px; color: var(--text-tertiary);">{{ $u->email }}</td>
                             <td style="padding: 12px;">
-                                @if($u->role === 'admin')
+                                @if($pendingInvite)
+                                    <span class="badge" style="background: rgba(234,179,8,0.12); color: #eab308; font-size: 11px;">⏳ Pending Invite</span>
+                                @elseif($u->role === 'admin')
                                     <span class="badge" style="background: var(--danger-soft); color: var(--danger); font-size: 11px;">Admin</span>
                                 @else
                                     <span class="badge" style="background: var(--bg-tertiary); color: var(--text-secondary); font-size: 11px;">Student</span>
@@ -62,3 +65,4 @@
         </div>
     </div>
 </x-admin-layout>
+

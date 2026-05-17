@@ -58,6 +58,20 @@
                         @endif
                     </div>
                 @endforeach
+
+                @foreach($pendingInvites as $invite)
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); opacity: 0.75;">
+                        <div>
+                            <span style="font-weight: 600; color: var(--text-secondary);">{{ $invite->email }}</span>
+                            <span class="badge" style="background: rgba(234,179,8,0.12); color: #eab308; font-size: 11px; margin-left: 8px; padding: 2px 6px; border-radius: 4px;">⏳ Invite Pending</span>
+                            <span style="font-size: 12px; color: var(--text-tertiary); margin-left: 8px;">Expires {{ $invite->expires_at->diffForHumans() }}</span>
+                        </div>
+                    </div>
+                @endforeach
+
+                @if($admins->isEmpty() && $pendingInvites->isEmpty())
+                    <div style="padding: 24px; text-align: center; color: var(--text-tertiary); font-size: 14px;">No admins or pending invites yet.</div>
+                @endif
             </div>
         </div>
     @endif
