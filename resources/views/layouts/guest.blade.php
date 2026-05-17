@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: var(--bg-primary); }
+        .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; background: var(--bg-primary); }
         .auth-card { width: 100%; max-width: 420px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 40px; box-shadow: var(--shadow-lg); }
         .auth-logo { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
         .auth-logo .logo-icon { width: 40px; height: 40px; background: var(--gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 20px; }
@@ -18,6 +18,12 @@
         .auth-footer a:hover { text-decoration: underline; }
         .auth-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; color: var(--text-tertiary); font-size: 13px; }
         .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        @media (max-width: 480px) {
+            .auth-card { padding: 24px 20px; border-radius: 16px; }
+            .auth-card h2 { font-size: 18px !important; }
+            .auth-logo { font-size: 18px; margin-bottom: 4px; }
+            .auth-subtitle { font-size: 13px; margin-bottom: 20px; }
+        }
     </style>
 </head>
 <body>

@@ -2,7 +2,7 @@
     {{-- Hero Section --}}
     @guest
     <div class="card-glass hero-section" style="background: var(--gradient); padding: 40px 40px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 30px; overflow: hidden; position: relative; border-radius: var(--radius-xl);">
-        <div style="flex: 1; min-width: 300px; text-align: left; z-index: 2; display: flex; flex-direction: column; justify-content: center;">
+        <div style="flex: 1; min-width: 0; text-align: left; z-index: 2; display: flex; flex-direction: column; justify-content: center;">
             <h1 style="font-size: 34px; font-weight: 800; color: white; margin-bottom: 16px; line-height: 1.2; letter-spacing: -0.5px;">Welcome to Peerly 🎓</h1>
             <p style="color: rgba(255,255,255,0.95); font-size: 16px; max-width: 480px; margin-bottom: 28px; line-height: 1.6;">
                 Your ultimate community hub to ask questions, share academic resources, and connect with fellow students worldwide.
@@ -13,7 +13,7 @@
                 </a>
             </div>
         </div>
-        <div style="flex: 1; min-width: 300px; z-index: 2; display: flex; justify-content: center; align-items: center;">
+        <div style="flex: 1; min-width: 0; z-index: 2; display: flex; justify-content: center; align-items: center;" class="hero-image-wrap">
             <img src="{{ asset('images/peerlycommunity.png') }}" alt="Peerly Community" style="max-width: 100%; height: auto; max-height: 280px; object-fit: contain; filter: drop-shadow(0px 15px 25px rgba(0,0,0,0.15)); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);" class="hero-image">
         </div>
         <!-- Decorative background elements -->
@@ -27,13 +27,24 @@
             box-shadow: 0 12px 25px rgba(0,0,0,0.2) !important;
             background: #f8fafc !important;
         }
-        .hero-btn:active {
-            transform: translateY(0);
+        .hero-btn:active { transform: translateY(0); }
+        .hero-image:hover { transform: scale(1.08) translateY(-8px); }
+        @media (max-width: 640px) {
+            .hero-section {
+                padding: 24px 20px !important;
+                gap: 0 !important;
+                justify-content: center !important;
+            }
+            .hero-section > div:first-child {
+                min-width: 0 !important;
+                text-align: center !important;
+                align-items: center !important;
+            }
+            .hero-section h1 { font-size: 22px !important; margin-bottom: 10px !important; }
+            .hero-section p { font-size: 13px !important; margin-bottom: 18px !important; }
+            .hero-image-wrap { display: none !important; }
         }
-        .hero-image:hover {
-            transform: scale(1.08) translateY(-8px);
-        }
-        @media (max-width: 860px) {
+        @media (min-width: 641px) and (max-width: 860px) {
             .hero-section {
                 text-align: center !important;
                 flex-direction: column-reverse;
@@ -42,11 +53,10 @@
             }
             .hero-section > div:first-child {
                 text-align: center !important;
-                align-items: center;
+                align-items: center !important;
+                min-width: 0 !important;
             }
-            .hero-image {
-                max-height: 220px !important;
-            }
+            .hero-image { max-height: 180px !important; }
         }
     </style>
     @endguest
