@@ -85,15 +85,16 @@
                                         @csrf
                                         <div>
                                             <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Badge Label</label>
-                                            <input type="text" name="label" placeholder="e.g., Expert, Top Contributor" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text);">
+                                            <input type="text" name="label" placeholder="e.g., Expert, Top Contributor" required style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text);">
                                         </div>
                                         <div>
                                             <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Icon (emoji or symbol)</label>
-                                            <input type="text" name="icon" maxlength="10" placeholder="e.g., 🏆 or ★" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text);">
+                                            <input type="text" name="icon" maxlength="10" placeholder="e.g., 🏆 or ★" required style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text);">
                                         </div>
                                         <div>
                                             <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Color (hex code)</label>
-                                            <input type="text" name="color" placeholder="#7c5cfc" pattern="^#[0-9a-f]{6}$" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text);">
+                                            <input type="color" name="color" value="#7c5cfc" required aria-label="Badge color" style="width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer;">
+                                            <small style="color: var(--text-tertiary); margin-top: 4px; display: block;">Use the color picker to select a color</small>
                                         </div>
                                         <button type="submit" class="btn btn-primary" style="width: 100%; padding: 8px; font-size: 13px;">
                                             <i class="ph ph-plus"></i> Add Badge
