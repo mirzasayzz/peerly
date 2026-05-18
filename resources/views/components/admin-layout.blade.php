@@ -41,8 +41,21 @@
         }
 
         @media (max-width: 768px) {
+            /* On mobile, make admin sidebar behave like a drawer (toggle with navbar button) */
             .admin-sidebar {
                 display: none;
+            }
+            .admin-sidebar.mobile-open {
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: var(--navbar-h);
+                left: 0;
+                bottom: 0;
+                width: 240px;
+                z-index: 120;
+                background: var(--bg-secondary);
+                box-shadow: var(--shadow-lg);
             }
 
             .admin-mobile-nav {
@@ -114,8 +127,8 @@
 
         {{-- Body --}}
         <div class="app-body">
-            {{-- Desktop Sidebar --}}
-            <div class="admin-sidebar">
+            {{-- Admin Sidebar (desktop + mobile drawer) --}}
+            <div class="admin-sidebar app-sidebar">
                 <div class="sidebar-section">
                     <div class="sidebar-title">Admin Controls</div>
                     <ul>
@@ -150,7 +163,7 @@
 
             {{-- Main Content Area --}}
             <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; overflow-x: hidden;">
-                {{-- Mobile Nav Tabs (replaces sidebar on mobile) --}}
+                {{-- Mobile Nav Tabs (optional quick access) --}}
                 <div class="admin-mobile-nav">
                     <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <i class="ph ph-squares-four"></i> Dashboard
