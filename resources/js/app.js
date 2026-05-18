@@ -37,8 +37,11 @@ function toggleTheme() {
 }
 window.toggleTheme = toggleTheme;
 
-// Mobile sidebar toggle
+// Mobile sidebar toggle (main + admin)
 function toggleSidebar() {
+    // If we're on an admin page, prefer the admin sidebar.
+    // Note: admin sidebar also has .app-sidebar so this works either way.
+    document.querySelector('.admin-sidebar')?.classList.toggle('mobile-open');
     document.querySelector('.app-sidebar')?.classList.toggle('mobile-open');
 }
 window.toggleSidebar = toggleSidebar;
@@ -62,10 +65,10 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Close mobile sidebar on outside click
+// Close mobile sidebar (main + admin) on outside click
 document.addEventListener('click', (e) => {
-    const sidebar = document.querySelector('.app-sidebar.mobile-open');
-    if (sidebar && !e.target.closest('.app-sidebar') && !e.target.closest('#sidebar-toggle')) {
+    const sidebar = document.querySelector('.app-sidebar.mobile-open') || document.querySelector('.admin-sidebar.mobile-open');
+    if (sidebar && !e.target.closest('.app-sidebar') && !e.target.closest('.admin-sidebar') && !e.target.closest('#sidebar-toggle')) {
         sidebar.classList.remove('mobile-open');
     }
 });
