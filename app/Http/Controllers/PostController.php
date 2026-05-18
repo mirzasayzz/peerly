@@ -52,17 +52,15 @@ class PostController extends Controller
             ->with('success', 'Post created successfully!');
     }
 
-    public function show(string $slug)
+    public function show(Post $post)
     {
-        $post = Post::where('slug', $slug)
-            ->with(['user', 'forum.category', 'tags', 'rootComments' => function ($q) {
-                $q->with(['user', 'replies' => function ($q2) {
-                    $q2->with(['user', 'replies.user'])->orderBy('created_at');
-                }])->orderBy('created_at');
-            }])
-            ->withCount('comments')
-            ->withSum('votes', 'value')
-            ->firstOrFail();
+        $post->load(['user', 'forum.category', 'tags', 'rootComments' => function ($q) {
+            $q->with(['user', 'replies' => function ($q2) {
+                $q2->with(['user', 'replies.user'])->orderBy('created_at');
+            }])->orderBy('created_at');
+        }]);
+        $post->loadCount('comments');
+        $post->loadSum('votes', 'value');
 
         $post->increment('view_count');
 

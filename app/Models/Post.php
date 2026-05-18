@@ -12,6 +12,12 @@ class Post extends Model
         'view_count', 'last_activity_at',
     ];
 
+    // Bind routes by slug instead of id
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     protected function casts(): array
     {
         return [

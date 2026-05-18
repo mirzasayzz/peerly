@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/forums', [ForumController::class, 'index'])->name('forums.index');
 Route::get('/f/{forum:slug}', [ForumController::class, 'show'])->name('forums.show');
-Route::get('/p/{slug}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/p/{post}', [PostController::class, 'show'])->name('posts.show');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
 Route::get('/@{username}', [UserProfileController::class, 'show'])->name('profile.show');
