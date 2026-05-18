@@ -9,7 +9,7 @@ class UserProfileController extends Controller
 {
     public function show(string $username)
     {
-        $query = User::where('username', $username);
+        $query = User::with('customBadges')->where('username', $username);
         
         if (is_numeric($username)) {
             $query->orWhere('id', $username);
