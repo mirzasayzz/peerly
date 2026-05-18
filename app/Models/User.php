@@ -49,6 +49,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // --- Relationships ---
 
+    public function customBadges()
+    {
+        return $this->hasMany(UserBadge::class);
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);
@@ -118,6 +123,31 @@ class User extends Authenticatable implements MustVerifyEmail
             $this->reputation >= 50 => ['label' => 'Contributor', 'icon' => '⭐', 'color' => '#7c5cfc'],
             default => ['label' => 'Newcomer', 'icon' => '🌱', 'color' => '#4ade80'],
         };
+    }
+
+    public function getAllBadges(): array
+    {
+        $badges = [];
+
+        // Add reputation badge
+        $badges[] = [
+            'label' => $this->reputation_badge['label'],
+            'icon' => $this->reputation_badge['icon'],
+            'color' => $this->reputation_badge['color'],
+            'type' => 'reputation',
+        ];
+
+        // Add custom admin-given badges
+        foreach ($this->customBadges as $badge) {
+            $badges[] = [
+                'label' => $badge->label,
+                'icon' => $badge->icon,
+                'color' => $badge->color,
+                'type' => 'custom',
+            ];
+        }
+
+        return $badges;
     }
 
     public function isFollowing(User $user): bool

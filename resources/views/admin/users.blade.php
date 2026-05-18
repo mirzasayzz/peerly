@@ -45,8 +45,11 @@
                             </td>
                             <td style="padding: 12px; color: var(--text-tertiary);">{{ $u->created_at->format('M d, Y') }}</td>
                             <td style="padding: 12px; text-align: right;">
+                                <button type="button" class="btn btn-sm" style="color: var(--info); background: transparent; border: 1px solid var(--info); padding: 4px 10px; cursor: pointer;" onclick="toggleBadgeForm('badge-form-{{ $u->id }}')">
+                                    <i class="ph ph-badge"></i> Badges
+                                </button>
                                 @if($u->email !== 'tubamirza822@gmail.com')
-                                <form action="{{ route('admin.users.destroy', $u) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user completely?');">
+                                <form action="{{ route('admin.users.destroy', $u) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user completely?');" style="display: inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm" style="color: var(--danger); background: transparent; border: 1px solid var(--danger); padding: 4px 10px;">
@@ -54,6 +57,49 @@
                                     </button>
                                 </form>
                                 @endif
+                            </td>
+                        </tr>
+                        <tr id="badge-form-{{ $u->id }}" style="display: none; border-bottom: 1px solid var(--border-light);">
+                            <td colspan="5" style="padding: 24px;">
+                                <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px;">
+                                    <h4 style="margin-bottom: 12px; font-weight: 600;">Current Badges for {{ $u->name }}</h4>
+                                    
+                                    {{-- Display existing badges --}}
+                                    <div style="margin-bottom: 16px;">
+                                        @forelse($u->customBadges as $customBadge)
+                                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-tertiary); padding: 8px 12px; border-radius: 6px; margin-right: 8px; margin-bottom: 8px; color: {{ $customBadge->color }};">
+                                                {{ $customBadge->icon }} {{ $customBadge->label }}
+                                                <form action="{{ route('admin.users.removeBadge', [$u, $customBadge]) }}" method="POST" style="display: inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm" style="background: transparent; border: none; padding: 0; color: var(--text-secondary); cursor: pointer; font-size: 14px; margin-left: 4px;">×</button>
+                                                </form>
+                                            </div>
+                                        @empty
+                                            <p style="color: var(--text-secondary); font-size: 13px;">No custom badges yet. Reputation badge: {{ $u->reputation_badge['label'] }}</p>
+                                        @endforelse
+                                    </div>
+
+                                    {{-- Add badge form --}}
+                                    <form action="{{ route('admin.users.addBadge', $u) }}" method="POST" style="display: grid; gap: 8px;">
+                                        @csrf
+                                        <div>
+                                            <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Badge Label</label>
+                                            <input type="text" name="label" placeholder="e.g., Expert, Top Contributor" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text);">
+                                        </div>
+                                        <div>
+                                            <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Icon (emoji or symbol)</label>
+                                            <input type="text" name="icon" maxlength="10" placeholder="e.g., 🏆 or ★" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text);">
+                                        </div>
+                                        <div>
+                                            <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Color (hex code)</label>
+                                            <input type="text" name="color" placeholder="#7c5cfc" pattern="^#[0-9a-f]{6}$" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text);">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 8px; font-size: 13px;">
+                                            <i class="ph ph-plus"></i> Add Badge
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -66,3 +112,9 @@
     </div>
 </x-admin-layout>
 
+<script>
+function toggleBadgeForm(formId) {
+    const form = document.getElementById(formId);
+    form.style.display = form.style.display === 'none' ? 'table-row' : 'none';
+}
+</script>

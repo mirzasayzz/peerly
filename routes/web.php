@@ -120,6 +120,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
         Route::get('/users', [\App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users.index');
+        Route::post('/users/{user}/badges', [\App\Http\Controllers\Admin\DashboardController::class, 'addBadge'])->name('users.addBadge');
+        Route::delete('/users/{user}/badges/{badge}', [\App\Http\Controllers\Admin\DashboardController::class, 'removeBadge'])->name('users.removeBadge');
         Route::get('/posts', [\App\Http\Controllers\Admin\DashboardController::class, 'posts'])->name('posts.index');
         Route::get('/comments', [\App\Http\Controllers\Admin\DashboardController::class, 'comments'])->name('comments.index');
 

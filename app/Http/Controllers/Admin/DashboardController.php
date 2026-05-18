@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AdminInvitation;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\UserBadge;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -26,7 +27,7 @@ class DashboardController extends Controller
     public function users()
     {
         if (auth()->user()->role !== 'admin') abort(403);
-        $users = User::orderBy('created_at', 'desc')->paginate(15);
+        $users = User::with('customBadges')->orderBy('created_at', 'desc')->paginate(15);
         // Collect emails that have a pending (not yet completed) invite
         $pendingEmails = AdminInvitation::where('status', 'pending')
             ->where('expires_at', '>', now())
@@ -87,4 +88,34 @@ class DashboardController extends Controller
         $status = $newStatus ? 'pinned' : 'unpinned';
         return back()->with('status', "Post {$status} successfully.");
     }
-}
+
+    public function addBadge(Request $request, User $user)
+    {
+        if (auth()->user()->role !== 'admin') abort(403);
+        
+        $validated = $request->validate([
+            'label' => 'required|string|max:255',
+            'icon' => 'required|string|max:10',
+            'color' => 'required|string|regex:/^#[0-9a-f]{6}$/i',
+        ]);
+
+        UserBadge::create([
+            'user_id' => $user->id,
+            'label' => $validated['label'],
+            'icon' => $validated['icon'],
+            'color' => $validated['color'],
+        ]);
+
+        return back()->with('status', "Badge '{$validated['label']}' added to {$user->name} successfully.");
+    }
+
+    public function removeBadge(User $user, UserBadge $badge)
+    {
+        if (auth()->user()->role !== 'admin') abort(403);
+        if ($badge->user_id !== $user->id) abort(404);
+        
+        $label = $badge->label;
+        $badge->delete();
+        
+        return back()->with('status', "Badge '{$label}' removed successfully.");
+    }

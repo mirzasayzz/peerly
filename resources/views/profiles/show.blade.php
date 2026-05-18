@@ -7,9 +7,11 @@
                 <h1>{{ $user->name }}</h1>
                 <div class="username">{{ '@' . ($user->username ?? $user->id) }}</div>
                 <div class="flex items-center gap-12 mt-8" style="flex-wrap: wrap;">
-                    <span class="reputation-badge" style="color: {{ $user->reputation_badge['color'] }};">
-                        {{ $user->reputation_badge['icon'] }} {{ $user->reputation_badge['label'] }} · {{ $user->reputation }} rep
-                    </span>
+                    @foreach($user->all_badges as $badge)
+                        <span class="reputation-badge" style="color: {{ $badge['color'] }};">
+                            {{ $badge['icon'] }} {{ $badge['label'] }}@if($badge['type'] === 'reputation') · {{ $user->reputation }} rep@endif
+                        </span>
+                    @endforeach
                     @if($user->university)
                         <span class="text-sm text-muted"><i class="ph ph-graduation-cap"></i> {{ $user->university }}</span>
                     @endif
