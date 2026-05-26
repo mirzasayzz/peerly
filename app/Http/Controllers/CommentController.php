@@ -14,7 +14,7 @@ class CommentController extends Controller
         $validated = $request->validate([
             'body' => 'required|string|min:2',
             'parent_id' => 'nullable|exists:comments,id',
-            'image' => 'nullable|image|max:5120', // 5MB max
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,pdf,doc,docx|max:3072', // 3MB max
         ]);
 
         $depth = 0;

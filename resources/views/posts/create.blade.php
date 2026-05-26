@@ -37,8 +37,11 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="image">Attach Image (optional)</label>
-                <input type="file" name="image" id="image" class="form-control" accept="image/*" style="padding-top: 8px;">
+                <label class="form-label" for="image">Attach Image / File (optional)</label>
+                <input type="file" name="image" id="image" class="form-control" accept="image/*,.pdf,.doc,.docx" style="padding-top: 8px;">
+                <p class="text-xs text-muted" style="margin-top: 6px;">
+                    Allowed formats: JPEG, PNG, JPG, GIF, SVG, WEBP, PDF, DOC, DOCX up to 3MB.
+                </p>
                 @error('image') <div class="form-error mt-4">{{ $message }}</div> @enderror
             </div>
 

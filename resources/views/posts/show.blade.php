@@ -129,7 +129,8 @@
                     
                     <div class="flex justify-between items-center mt-8" style="flex-wrap: wrap; gap: 12px;">
                         <div style="max-width: 100%;">
-                            <input type="file" name="image" id="image" class="text-sm text-muted" accept="image/*" style="max-width: 100%;">
+                            <input type="file" name="image" id="image" class="text-sm text-muted" accept="image/*,.pdf,.doc,.docx" style="max-width: 100%;">
+                            <div class="text-xs text-muted" style="margin-top: 4px;">JPEG, PNG, JPG, GIF, SVG, WEBP, PDF, DOC, DOCX up to 3MB</div>
                             @error('image') <div class="form-error mt-4">{{ $message }}</div> @enderror
                         </div>
                         <button type="submit" class="btn btn-primary btn-sm" style="flex-shrink: 0;"><i class="ph ph-paper-plane-tilt"></i> Post Reply</button>

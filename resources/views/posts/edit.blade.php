@@ -69,16 +69,29 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="image">Post Image (optional)</label>
+                <label class="form-label" for="image">Post Image / File (optional)</label>
 
                 @if(!empty($post->image_path))
                     <div style="margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; background: rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px; max-width: 100%;">
                         <span class="text-sm text-muted">Current Attachment:</span>
-                        <img
-                            src="{{ $post->image_url }}"
-                            alt="Post image"
-                            style="max-width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); max-height: 250px; object-fit: cover;"
-                        >
+                        @php
+                            $ext = strtolower(pathinfo($post->image_path, PATHINFO_EXTENSION));
+                            $isDoc = in_array($ext, ['pdf', 'doc', 'docx']);
+                        @endphp
+                        @if($isDoc)
+                            <div style="padding: 12px; border-radius: var(--radius-md); background: var(--bg-tertiary); border: 1px solid var(--border); display: flex; align-items: center; gap: 12px;">
+                                <i class="ph ph-file-text" style="font-size: 28px; color: var(--accent);"></i>
+                                <div>
+                                    <a href="{{ $post->image_url }}" target="_blank" style="font-size: 14px; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 4px;"><i class="ph ph-download-simple"></i> Download PDF/Document</a>
+                                </div>
+                            </div>
+                        @else
+                            <img
+                                src="{{ $post->image_url }}"
+                                alt="Post image"
+                                style="max-width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); max-height: 250px; object-fit: cover;"
+                            >
+                        @endif
                         <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
                             <input
                                 type="checkbox"
@@ -87,7 +100,7 @@
                                 value="1"
                                 style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--accent);"
                             >
-                            <span class="text-sm text-muted">Remove current image attachment</span>
+                            <span class="text-sm text-muted">Remove current attachment</span>
                         </label>
                     </div>
                 @endif
@@ -97,11 +110,11 @@
                     name="image"
                     id="image"
                     class="form-control"
-                    accept="image/*"
+                    accept="image/*,.pdf,.doc,.docx"
                     style="padding-top: 8px; width: 100%;"
                 >
                 <p class="text-xs text-muted" style="margin-top: 6px;">
-                    Upload a new image to replace the current one, or attach an image if none exists (JPEG, PNG, JPG, GIF, SVG, WEBP up to 5MB).
+                    Upload a new file to replace the current one, or attach a file if none exists (JPEG, PNG, JPG, GIF, SVG, WEBP, PDF, DOC, DOCX up to 3MB).
                 </p>
 
                 @error('image')

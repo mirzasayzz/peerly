@@ -23,9 +23,22 @@
         </div>
         <div class="comment-text mt-4">
             @if($comment->image_url)
-                <div style="margin-bottom: 12px; max-width: 300px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border);">
-                    <img src="{{ $comment->image_url }}" alt="Attachment" style="max-width: 100%; height: auto; display: block;">
-                </div>
+                @php
+                    $ext = strtolower(pathinfo($comment->image_path, PATHINFO_EXTENSION));
+                    $isDoc = in_array($ext, ['pdf', 'doc', 'docx']);
+                @endphp
+                @if($isDoc)
+                    <div style="margin-bottom: 12px; padding: 12px; border-radius: var(--radius-sm); background: var(--bg-tertiary); border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 8px; max-width: 100%;">
+                        <i class="ph ph-file-text" style="font-size: 24px; color: var(--accent);"></i>
+                        <div>
+                            <a href="{{ $comment->image_url }}" target="_blank" style="font-size: 13px; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 4px;"><i class="ph ph-download-simple"></i> Download PDF/Document</a>
+                        </div>
+                    </div>
+                @else
+                    <div style="margin-bottom: 12px; max-width: 300px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border);">
+                        <img src="{{ $comment->image_url }}" alt="Attachment" style="max-width: 100%; height: auto; display: block;">
+                    </div>
+                @endif
             @endif
             {!! nl2br(e($comment->body)) !!}
         </div>
@@ -58,8 +71,11 @@
             <input type="hidden" name="parent_id" value="{{ $comment->id }}">
             <textarea name="body" class="form-textarea" rows="2" placeholder="Reply to {{ $comment->user->name }}..." required></textarea>
             
-            <div class="flex justify-between items-center mt-4">
-                <input type="file" name="image" class="text-xs text-muted" accept="image/*" style="max-width: 200px;">
+            <div class="flex justify-between items-center mt-4" style="flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <input type="file" name="image" class="text-xs text-muted" accept="image/*,.pdf,.doc,.docx" style="max-width: 200px;">
+                    <span class="text-xs text-muted" style="font-size: 10px;">Images or PDF/Docs up to 3MB</span>
+                </div>
                 <button type="submit" class="btn btn-primary btn-sm"><i class="ph ph-paper-plane-tilt"></i> Reply</button>
             </div>
         </form>
