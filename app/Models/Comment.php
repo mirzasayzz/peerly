@@ -15,6 +15,19 @@ class Comment extends Model
         ];
     }
 
+    protected static function booted()
+    {
+        static::deleting(function ($comment) {
+            if ($comment->image_path) {
+                try {
+                    \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->delete($comment->image_path);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to delete comment image from storage on model delete: ' . $e->getMessage());
+                }
+            }
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -125,11 +125,6 @@ class PostController extends Controller
         Gate::authorize('delete', $post);
         $forumSlug = $post->forum->slug;
 
-        // Delete post image from S3 if exists
-        if ($post->image_path) {
-            Storage::disk(config('filesystems.default'))->delete($post->image_path);
-        }
-
         $post->delete();
 
         return redirect()->route('forums.show', $forumSlug)

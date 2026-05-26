@@ -28,6 +28,19 @@ class Post extends Model
         ];
     }
 
+    protected static function booted()
+    {
+        static::deleting(function ($post) {
+            if ($post->image_path) {
+                try {
+                    \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->delete($post->image_path);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to delete post image from storage on model delete: ' . $e->getMessage());
+                }
+            }
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
