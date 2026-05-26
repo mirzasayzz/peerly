@@ -47,6 +47,26 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            // Delete user posts one-by-one to trigger Eloquent delete events (e.g. S3 files, comments, votes, reports cascade)
+            $user->posts->each->delete();
+
+            // Delete user comments one-by-one to trigger Eloquent delete events (e.g. S3 comment attachment deletion)
+            $user->comments->each->delete();
+
+            // Delete avatar image from storage
+            if ($user->avatar && !str_starts_with($user->avatar, 'http')) {
+                try {
+                    \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->delete($user->avatar);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to delete user avatar from storage on model delete: ' . $e->getMessage());
+                }
+            }
+        });
+    }
+
     // --- Relationships ---
 
     public function posts()

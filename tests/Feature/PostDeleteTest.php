@@ -150,4 +150,33 @@ class PostDeleteTest extends TestCase
         $response->assertStatus(403);
         $this->assertDatabaseHas('posts', ['id' => $post->id]);
     }
+
+    public function test_deleting_user_deletes_avatar_and_posts_cascades(): void
+    {
+        Storage::fake();
+
+        $user = User::factory()->create([
+            'username' => 'to_be_deleted',
+            'avatar' => 'avatars/avatar.png',
+        ]);
+
+        $post = Post::create([
+            'user_id' => $user->id,
+            'forum_id' => $this->forum->id,
+            'title' => 'User Post',
+            'slug' => 'user-post',
+            'body' => 'Post body goes here.',
+            'image_path' => 'posts/post_attachment.pdf',
+        ]);
+
+        // Trigger user delete
+        $user->delete();
+
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        $this->assertDatabaseMissing('posts', ['id' => $post->id]);
+        
+        // Verify files are deleted from storage
+        Storage::disk(config('filesystems.default'))->assertMissing('avatars/avatar.png');
+        Storage::disk(config('filesystems.default'))->assertMissing('posts/post_attachment.pdf');
+    }
 }
