@@ -31,6 +31,13 @@ class Post extends Model
     protected static function booted()
     {
         static::deleting(function ($post) {
+            // Delete polymorphic votes & reports
+            $post->votes()->delete();
+            $post->reports()->delete();
+
+            // Force comment deletion through model events to trigger Comment image deletions & relationships
+            $post->comments->each->delete();
+
             if ($post->image_path) {
                 try {
                     \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->delete($post->image_path);

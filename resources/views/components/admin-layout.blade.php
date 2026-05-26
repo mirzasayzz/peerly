@@ -35,7 +35,7 @@
             background: var(--bg-secondary);
         }
 
-        /* Mobile admin nav — horizontal tab bar at top of content */
+        /* Mobile admin nav - horizontal tab bar at top of content */
         .admin-mobile-nav {
             display: none;
         }

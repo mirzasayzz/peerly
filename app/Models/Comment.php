@@ -18,6 +18,10 @@ class Comment extends Model
     protected static function booted()
     {
         static::deleting(function ($comment) {
+            // Delete polymorphic votes & reports
+            $comment->votes()->delete();
+            $comment->reports()->delete();
+
             if ($comment->image_path) {
                 try {
                     \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->delete($comment->image_path);
