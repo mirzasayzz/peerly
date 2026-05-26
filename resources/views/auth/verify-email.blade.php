@@ -1,20 +1,20 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
+    <div style="color: var(--text-tertiary); font-size: 14px; margin-bottom: 24px;">
         {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
     </div>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
+        <div style="padding: 12px 16px; background: var(--success-soft); border: 1px solid var(--success); border-radius: var(--radius-md); color: var(--success); font-size: 14px; margin-bottom: 16px;">
             {{ __('A new verification link has been sent to the email address you provided during registration.') }}
         </div>
     @endif
 
-    <div class="mt-4 flex items-center justify-between">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px;">
         <form method="POST" action="{{ route('verification.send') }}">
             @csrf
 
             <div>
-                <x-primary-button>
+                <x-primary-button style="height: 48px; font-size: 15px;">
                     {{ __('Resend Verification Email') }}
                 </x-primary-button>
             </div>
@@ -23,9 +23,10 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
 
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button type="submit" style="font-size: 14px; color: var(--text-tertiary); transition: var(--transition);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-tertiary)'">
                 {{ __('Log Out') }}
             </button>
         </form>
     </div>
 </x-guest-layout>
+
