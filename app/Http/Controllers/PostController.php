@@ -7,6 +7,8 @@ use App\Models\Forum;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -69,7 +71,7 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        $this->authorize('update', $post);
+        Gate::authorize('update', $post);
         $forums = Forum::with('category')->get()->groupBy('category.name');
         $tags = Tag::orderBy('name')->get();
         return view('posts.edit', compact('post', 'forums', 'tags'));
@@ -77,7 +79,7 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
-        $this->authorize('update', $post);
+        Gate::authorize('update', $post);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -85,12 +87,31 @@ class PostController extends Controller
             'forum_id' => 'required|exists:forums,id',
             'tags' => 'array|max:5',
             'tags.*' => 'exists:tags,id',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,pdf,doc,docx|max:5120', // 5MB max
         ]);
+
+        $imagePath = $post->image_path;
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($post->image_path) {
+                Storage::disk(config('filesystems.default'))->delete($post->image_path);
+            }
+            // Store new image
+            $imagePath = $request->file('image')->store('posts', config('filesystems.default'));
+        } elseif ($request->boolean('remove_image')) {
+            // Delete old image if user wants to remove it
+            if ($post->image_path) {
+                Storage::disk(config('filesystems.default'))->delete($post->image_path);
+            }
+            $imagePath = null;
+        }
 
         $post->update([
             'title' => $validated['title'],
             'body' => $validated['body'],
             'forum_id' => $validated['forum_id'],
+            'image_path' => $imagePath,
         ]);
 
         $post->tags()->sync($validated['tags'] ?? []);
@@ -101,8 +122,14 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        $this->authorize('delete', $post);
+        Gate::authorize('delete', $post);
         $forumSlug = $post->forum->slug;
+
+        // Delete post image from S3 if exists
+        if ($post->image_path) {
+            Storage::disk(config('filesystems.default'))->delete($post->image_path);
+        }
+
         $post->delete();
 
         return redirect()->route('forums.show', $forumSlug)

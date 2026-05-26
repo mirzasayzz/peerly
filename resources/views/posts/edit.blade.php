@@ -68,17 +68,46 @@
                 @enderror
             </div>
 
-            @if(!empty($post->image_path))
-                <div class="form-group">
-                    <label class="form-label">Current Image</label>
+            <div class="form-group">
+                <label class="form-label" for="image">Post Image (optional)</label>
 
-                    <img
-                        src="{{ $post->image_url }}"
-                        alt="Post image"
-                        style="width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border); max-height: 420px; object-fit: cover;"
-                    >
-                </div>
-            @endif
+                @if(!empty($post->image_path))
+                    <div style="margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; background: rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px; max-width: 100%;">
+                        <span class="text-sm text-muted">Current Attachment:</span>
+                        <img
+                            src="{{ $post->image_url }}"
+                            alt="Post image"
+                            style="max-width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border); max-height: 250px; object-fit: cover;"
+                        >
+                        <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
+                            <input
+                                type="checkbox"
+                                name="remove_image"
+                                id="remove_image"
+                                value="1"
+                                style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--accent);"
+                            >
+                            <span class="text-sm text-muted">Remove current image attachment</span>
+                        </label>
+                    </div>
+                @endif
+
+                <input
+                    type="file"
+                    name="image"
+                    id="image"
+                    class="form-control"
+                    accept="image/*"
+                    style="padding-top: 8px; width: 100%;"
+                >
+                <p class="text-xs text-muted" style="margin-top: 6px;">
+                    Upload a new image to replace the current one, or attach an image if none exists (JPEG, PNG, JPG, GIF, SVG, WEBP up to 5MB).
+                </p>
+
+                @error('image')
+                    <div class="form-error mt-2">{{ $message }}</div>
+                @enderror
+            </div>
 
             <div class="form-group">
                 <label class="form-label">Tags (select up to 5)</label>
