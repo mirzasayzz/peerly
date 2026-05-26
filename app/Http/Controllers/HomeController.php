@@ -24,8 +24,8 @@ class HomeController extends Controller
                 $posts->orderByDesc('votes_sum_value');
                 break;
             case 'unanswered':
-                $posts->where('is_resolved', '=', false)
-                      ->doesntHave('comments')
+                $posts->whereRaw('is_resolved = false')
+                      ->has('comments', '=', 0)
                       ->orderByDesc('created_at');
                 break;
             default: // trending
