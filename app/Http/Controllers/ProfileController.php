@@ -30,12 +30,30 @@ class ProfileController extends Controller
         $validated = $request->validated();
 
         if ($request->hasFile('avatar')) {
-            // Delete old avatar if exists and not using external URL
-            if ($user->avatar && !str_starts_with($user->avatar, 'http')) {
-                \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->delete($user->avatar);
+            $disk = config('filesystems.default');
+
+            try {
+                $path = $request->file('avatar')->store('avatars', $disk);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Avatar upload failed: ' . $e->getMessage());
+                $path = false;
             }
-            $path = $request->file('avatar')->store('avatars', config('filesystems.default'));
-            $validated['avatar'] = $path;
+
+            if ($path) {
+                // Delete old avatar if exists and not using external URL
+                if ($user->avatar && !str_starts_with($user->avatar, 'http')) {
+                    try {
+                        \Illuminate\Support\Facades\Storage::disk($disk)->delete($user->avatar);
+                    } catch (\Exception $e) {
+                        // Ignore delete errors for old avatar
+                    }
+                }
+                $validated['avatar'] = $path;
+            } else {
+                return Redirect::route('profile.edit')
+                    ->withErrors(['avatar' => 'Failed to upload image. Please check your storage configuration and try again.'])
+                    ->withInput();
+            }
         }
 
         $user->fill($validated);
