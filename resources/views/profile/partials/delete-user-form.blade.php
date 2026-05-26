@@ -1,18 +1,18 @@
 <section class="space-y-6">
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Delete Account') }}
+            {{ __('Request Account Deletion') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
+            {{ __('Once you submit a request, your account deletion will be queued for review by an administrator. After submitting the request, you will be logged out and your account will be disabled pending approval.') }}
         </p>
     </header>
 
     <x-danger-button
         x-data=""
         x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Delete Account') }}</x-danger-button>
+    >{{ __('Request Deletion') }}</x-danger-button>
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
         <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
@@ -20,12 +20,23 @@
             @method('delete')
 
             <h2 class="text-lg font-medium text-gray-900">
-                {{ __('Are you sure you want to delete your account?') }}
+                {{ __('Are you sure you want to request account deletion?') }}
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                {{ __('Please enter your password and an optional reason to request account deletion. An administrator will review your request.') }}
             </p>
+
+            <div class="mt-6">
+                <x-input-label for="reason" value="{{ __('Reason for deletion (optional)') }}" class="text-sm text-gray-700" />
+                <textarea
+                    id="reason"
+                    name="reason"
+                    class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm"
+                    rows="3"
+                    placeholder="Why do you want to delete your account?"
+                ></textarea>
+            </div>
 
             <div class="mt-6">
                 <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
@@ -47,7 +58,7 @@
                 </x-secondary-button>
 
                 <x-danger-button class="ms-3">
-                    {{ __('Delete Account') }}
+                    {{ __('Submit Deletion Request') }}
                 </x-danger-button>
             </div>
         </form>

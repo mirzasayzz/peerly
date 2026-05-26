@@ -143,6 +143,11 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{ route('admin.deletion-requests.index') }}" class="sidebar-link {{ request()->routeIs('admin.deletion-requests.index') ? 'active' : '' }}">
+                                <i class="ph ph-user-minus link-icon"></i> Deletion Requests
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('admin.posts.index') }}" class="sidebar-link {{ request()->routeIs('admin.posts.index') ? 'active' : '' }}">
                                 <i class="ph ph-article link-icon"></i> Manage Posts
                             </a>
@@ -170,6 +175,9 @@
                     </a>
                     <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
                         <i class="ph ph-users"></i> Users
+                    </a>
+                    <a href="{{ route('admin.deletion-requests.index') }}" class="{{ request()->routeIs('admin.deletion-requests.index') ? 'active' : '' }}">
+                        <i class="ph ph-user-minus"></i> Deletions
                     </a>
                     <a href="{{ route('admin.posts.index') }}" class="{{ request()->routeIs('admin.posts.index') ? 'active' : '' }}">
                         <i class="ph ph-article"></i> Posts

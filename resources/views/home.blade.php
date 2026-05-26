@@ -122,6 +122,11 @@
                         <a href="{{ route('profile.show', $post->user->username ?? $post->user->id) }}" class="user-badge">
                             <img src="{{ $post->user->avatar_url }}" alt="{{ $post->user->name }}" class="avatar avatar-sm">
                             <span class="badge-name">{{ $post->user->name }}</span>
+                            @if($post->user->isAdmin())
+                                <span class="tag" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); font-size: 10px; padding: 2px 6px; line-height: 1; display: inline-flex; align-items: center; gap: 2px;">
+                                    <i class="ph ph-shield" style="font-size: 10px;"></i> Admin
+                                </span>
+                            @endif
                         </a>
                         <span><i class="ph ph-chat-circle"></i> {{ $post->comments_count }} replies</span>
                         <span><i class="ph ph-eye"></i> {{ $post->view_count }} views</span>

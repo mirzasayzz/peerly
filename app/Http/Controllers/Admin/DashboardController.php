@@ -87,4 +87,37 @@ class DashboardController extends Controller
         $status = $newStatus ? 'pinned' : 'unpinned';
         return back()->with('status', "Post {$status} successfully.");
     }
+
+    public function deletionRequests()
+    {
+        if (auth()->user()->role !== 'admin') abort(403);
+        $requests = \App\Models\AccountDeletionRequest::with('user')
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+        return view('admin.deletion-requests', compact('requests'));
+    }
+
+    public function approveDeletionRequest(\App\Models\AccountDeletionRequest $deletionRequest)
+    {
+        if (auth()->user()->role !== 'admin') abort(403);
+
+        $user = $deletionRequest->user;
+        if ($user->email === 'tubamirza822@gmail.com') {
+            abort(403, 'Cannot delete super admin.');
+        }
+
+        $user->delete();
+
+        return back()->with('status', 'Account deleted successfully.');
+    }
+
+    public function rejectDeletionRequest(\App\Models\AccountDeletionRequest $deletionRequest)
+    {
+        if (auth()->user()->role !== 'admin') abort(403);
+
+        $deletionRequest->delete();
+
+        return back()->with('status', 'Deletion request rejected.');
+    }
 }

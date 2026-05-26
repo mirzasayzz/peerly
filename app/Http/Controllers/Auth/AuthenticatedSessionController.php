@@ -27,6 +27,15 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $user = Auth::user();
+
+        // Intercept pending deletion requests
+        if (\App\Models\AccountDeletionRequest::where('user_id', $user->id)->where('status', 'pending')->exists()) {
+            Auth::logout();
+            return redirect()->back()->withErrors([
+                'email' => 'Your account is pending deletion and cannot be accessed.',
+            ]);
+        }
+
         if ($user->role === 'admin') {
             Auth::logout();
             return redirect()->back()->withErrors([

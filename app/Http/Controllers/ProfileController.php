@@ -82,13 +82,24 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        Auth::logout();
+        // Check if there is already a pending deletion request
+        $exists = \App\Models\AccountDeletionRequest::where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->exists();
 
-        $user->delete();
+        if (!$exists) {
+            \App\Models\AccountDeletionRequest::create([
+                'user_id' => $user->id,
+                'status' => 'pending',
+                'reason' => $request->input('reason'),
+            ]);
+        }
+
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to('/')->with('success', 'Your account deletion request has been submitted to the administrator for review.');
     }
 }

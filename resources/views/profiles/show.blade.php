@@ -4,7 +4,14 @@
         <div class="profile-info">
             <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="avatar-xl">
             <div class="profile-details">
-                <h1>{{ $user->name }}</h1>
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <h1>{{ $user->name }}</h1>
+                    @if($user->isAdmin())
+                        <span class="tag" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); font-size: 11px; padding: 2px 8px; line-height: 1.4; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="ph ph-shield"></i> Admin
+                        </span>
+                    @endif
+                </div>
                 <div class="username">{{ '@' . ($user->username ?? $user->id) }}</div>
                 <div class="flex items-center gap-12 mt-8" style="flex-wrap: wrap;">
                     <span class="reputation-badge" style="color: {{ $user->reputation_badge['color'] }};">

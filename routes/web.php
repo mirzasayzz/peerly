@@ -122,11 +122,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/users', [\App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users.index');
         Route::get('/posts', [\App\Http\Controllers\Admin\DashboardController::class, 'posts'])->name('posts.index');
         Route::get('/comments', [\App\Http\Controllers\Admin\DashboardController::class, 'comments'])->name('comments.index');
+        Route::get('/deletion-requests', [\App\Http\Controllers\Admin\DashboardController::class, 'deletionRequests'])->name('deletion-requests.index');
 
         Route::delete('/users/{user}', [\App\Http\Controllers\Admin\DashboardController::class, 'deleteUser'])->name('users.destroy');
         Route::delete('/posts/{post}', [\App\Http\Controllers\Admin\DashboardController::class, 'deletePost'])->name('posts.destroy');
         Route::post('/posts/{post}/pin', [\App\Http\Controllers\Admin\DashboardController::class, 'togglePinPost'])->name('posts.pin');
         Route::delete('/comments/{comment}', [\App\Http\Controllers\Admin\DashboardController::class, 'deleteComment'])->name('comments.destroy');
+        Route::post('/deletion-requests/{deletionRequest}/approve', [\App\Http\Controllers\Admin\DashboardController::class, 'approveDeletionRequest'])->name('deletion-requests.approve');
+        Route::post('/deletion-requests/{deletionRequest}/reject', [\App\Http\Controllers\Admin\DashboardController::class, 'rejectDeletionRequest'])->name('deletion-requests.reject');
     });
 });
 

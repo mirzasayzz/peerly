@@ -48,7 +48,14 @@
                     <a href="{{ route('profile.show', $post->user->username ?? $post->user->id) }}" class="user-badge">
                         <img src="{{ $post->user->avatar_url }}" alt="" class="avatar">
                         <div>
-                            <span class="badge-name">{{ $post->user->name }}</span>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span class="badge-name">{{ $post->user->name }}</span>
+                                @if($post->user->isAdmin())
+                                    <span class="tag" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); font-size: 10px; padding: 2px 6px; line-height: 1; display: inline-flex; align-items: center; gap: 2px;">
+                                        <i class="ph ph-shield" style="font-size: 10px;"></i> Admin
+                                    </span>
+                                @endif
+                            </div>
                             <div class="text-xs text-muted">{{ $post->created_at->diffForHumans() }} · {{ $post->view_count }} views</div>
                         </div>
                     </a>
@@ -90,13 +97,17 @@
 
                 {{-- Post Actions --}}
                 @auth
-                @if(auth()->id() === $post->user_id)
+                @if(auth()->user()->can('update', $post) || auth()->user()->can('delete', $post))
                 <div class="flex gap-8 mt-16" style="padding-top: 16px; border-top: 1px solid var(--border);">
-                    <a href="{{ route('posts.edit', $post) }}" class="btn btn-ghost btn-sm"><i class="ph ph-pencil"></i> Edit</a>
-                    <form method="POST" action="{{ route('posts.destroy', $post) }}" onsubmit="return confirm('Delete this post?');">
-                        @csrf @method('DELETE')
-                        <button class="btn btn-ghost btn-sm" style="color: var(--danger);"><i class="ph ph-trash"></i> Delete</button>
-                    </form>
+                    @can('update', $post)
+                        <a href="{{ route('posts.edit', $post) }}" class="btn btn-ghost btn-sm"><i class="ph ph-pencil"></i> Edit</a>
+                    @endcan
+                    @can('delete', $post)
+                        <form method="POST" action="{{ route('posts.destroy', $post) }}" onsubmit="return confirm('Delete this post?');">
+                            @csrf @method('DELETE')
+                            <button class="btn btn-ghost btn-sm" style="color: var(--danger);"><i class="ph ph-trash"></i> Delete</button>
+                        </form>
+                    @endcan
                 </div>
                 @endif
                 @endauth

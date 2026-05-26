@@ -6,6 +6,11 @@
     <div class="comment-body">
         <div class="flex items-center gap-8">
             <a href="{{ route('profile.show', $comment->user->username ?? $comment->user->id) }}" class="badge-name text-sm">{{ $comment->user->name }}</a>
+            @if($comment->user->isAdmin())
+                <span class="tag" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); font-size: 10px; padding: 2px 6px; line-height: 1; display: inline-flex; align-items: center; gap: 2px;">
+                    <i class="ph ph-shield" style="font-size: 10px;"></i> Admin
+                </span>
+            @endif
             @if($comment->is_solution)
                 <span class="tag" style="background: var(--success-soft); color: var(--success); font-size: 11px;">
                     <i class="ph-fill ph-check-circle"></i> Solution
